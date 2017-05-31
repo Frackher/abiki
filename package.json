@@ -1,0 +1,18 @@
+{
+  "name": "chatbottest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" &amp;&amp; exit 1",
+    "start": "node app.js"
+  },
+  "author": "Hervé FRACKOWIAK",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.4",
+    "request": "^2.81.0"
+  }
+}
