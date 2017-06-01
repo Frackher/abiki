@@ -102,8 +102,8 @@ function welcome(senderId, obj){
 }
 
 function randomize(obj){
-  for each(var in obj){
-    console.log("ICI !"+var);
+  for each(test in obj){
+    console.log("ICI !"+test);
   }
 }
 
