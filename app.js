@@ -71,12 +71,12 @@ function getUserInfo(senderId, requestedFields, callback){
         console.log("Error getting user info: "+ error);
       } else {
         var bodyObj = JSON.parse(body);
-        callback(bodyObj);
+        callback(senderId, bodyObj);
       }
   });
 }
 
-function welcome(obj){
+function welcome(senderId, obj){
   greeting = "Ahoy " + obj.first_name + " ! ";
   var message = greeting + "Bienvenue à l'agence Pirate !";
   sendMessage(senderId, {text: message});
