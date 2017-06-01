@@ -82,7 +82,8 @@ function getUserInfo(senderId, requestedFields, callback){
 function welcome(senderId, obj){
   fs.readFile('./words/messages.xml', function(err,data){
     var parser = new xml2js.Parser(data);
-    console.log("XML: "+parser.ai.name);
+    console.log("XML: "+parser);
+    console.dir(parser);
   });
 
 
