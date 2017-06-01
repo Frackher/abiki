@@ -94,18 +94,25 @@ function welcome(senderId, obj){
   // Save customer name
   customer.name = obj.first_name
 
-
-
-  greeting = "Ahoy " + customer.name + " ! ";
-  randomize(messages.greetings);
-  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
+  var message = randomize(messages.greetings);
   sendMessage(senderId, {text: message});
 }
 
 function randomize(obj){
   var rand = obj[Math.floor(Math.random() * obj.length)];
-  console.log("Rand"+rand);
-  console.log("Phrase"+obj[rand]);
+  return customize(rand);
+}
+
+function customize(phrase){
+var mapObj = {
+   #name#:customer.name,
+   #ai.name#:messages.ai.name
+};
+phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
+  return mapObj[matched];
+});
+
+return phrase;
 }
 
 // Request API
