@@ -9,6 +9,17 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.listen((process.env.PORT || 5000));
 
+
+//Read the XML files
+var messages = "";
+fs.readFile('./words/messages.xml', function(err,data){
+  var parser = new xml2js.Parser();
+  parser.parseString(data, function (err, result) {
+    messages = result;
+    console.log('Name:'+result.ai.name);
+  });
+});
+
 // Server index page
 app.get("/", function (req, res) {
   res.send("We are online !");
@@ -80,16 +91,11 @@ function getUserInfo(senderId, requestedFields, callback){
 
 // Will welcome people
 function welcome(senderId, obj){
-  fs.readFile('./words/messages.xml', function(err,data){
-    var parser = new xml2js.Parser();
-    parser.parseString(data, function (err, result) {
-      console.log('Name:'+result.ai.name);
-    });
-  });
+
 
 
   greeting = "Ahoy " + obj.first_name + " ! ";
-  var message = greeting + "Bienvenue à l'agence Pirate !";
+  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
   sendMessage(senderId, {text: message});
 }
 
