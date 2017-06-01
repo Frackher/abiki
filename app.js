@@ -102,6 +102,7 @@ function welcome(senderId, obj){
 }
 
 function randomize(obj){
+  console.log('Here :'+obj)
   for (var i in obj) {
     val = obj[i];
     console.log("ICI ! "+val);
