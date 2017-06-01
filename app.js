@@ -49,6 +49,7 @@ function processPostback(event) {
   var payload = event.postback.payload;
 
   if (payload === "Greeting") {
+    console.log("I'm In !");
     // Get user's first name from the User Profile API
     // and include it in the greeting
     var name = getUserInfo(senderId, "first_name");
