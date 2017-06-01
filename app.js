@@ -9,7 +9,7 @@ app.listen((process.env.PORT || 5000));
 
 // Server index page
 app.get("/", function (req, res) {
-  res.send("Deployed!");
+  res.send("We are online !");
 });
 
 // Facebook Webhook
@@ -43,6 +43,7 @@ app.post("/webhook", function (req, res) {
   }
 });
 
+// Processing Postback answer
 function processPostback(event) {
   var senderId = event.sender.id;
   var payload = event.postback.payload;
@@ -50,6 +51,12 @@ function processPostback(event) {
   if (payload === "Greeting") {
     // Get user's first name from the User Profile API
     // and include it in the greeting
+    var name = getUserInfo(senderId, "first_name");
+    greeting = "Ahoy " + name + " ! ";
+    var message = greeting + "Bienvenue à l'agence Pirate !";
+    sendMessage(senderId, {text: message});
+
+/*
     request({
       url: "https://graph.facebook.com/v2.6/" + senderId,
       qs: {
@@ -69,7 +76,29 @@ function processPostback(event) {
       var message = greeting + "Ahoy Moussaillon, Bienvenue à l'agence Pirate !";
       sendMessage(senderId, {text: message});
     });
+*/
+
   }
+}
+
+// Ask user info
+function getUserInfo(senderId, requestedFields){
+  request({
+    url: "https://graph.facebook.com/v2.6/" + senderId,
+    qs: {
+      access_token: process.env.PAGE_ACCESS_TOKEN,
+      fields: requestedFields
+    },
+    method: "GET"
+    }, function(error, response, body){
+      //manage answers
+      if(error) {
+        console.log("Error getting user info: "+ error);
+      } else {
+        var bodyObj = JSON.parse(body);
+        return bodyObj;
+      }
+  });
 }
 
 // sends message to user
