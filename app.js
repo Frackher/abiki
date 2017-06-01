@@ -5,7 +5,7 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-//var fs = require('fs');
+var fs = require('fs');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -14,7 +14,12 @@ app.listen((process.env.PORT || 5000));
 
 
 //Read the Json files
-var messages = require('./words/messages.json');
+var messages;
+fs.readFile('./words/messages.json', 'utf8', function (err, data) {
+    if (err) throw err; // we'll not consider error handling for now
+    messages = JSON.parse(data);
+});
+
 console.log("1: "+messages.ai);
 console.log("2: "+messages.ai.name);
 
