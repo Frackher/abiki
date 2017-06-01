@@ -19,11 +19,11 @@ var messages = "";
 fs.readFile('./words/messages.xml', function(err,data){
   var parser = new xml2js.Parser();
   parser.parseString(data, function (err, result) {
-    messages = result.text;
+    messages = result;
     console.dir(result);
     console.dir(messages);
-    console.log('Name:'+messages.ai.name);
-    console.log('Greet:'+messages.greetings);
+    console.log('Name:'+messages.text.ai.name);
+    console.log('Greet:'+messages.text.greetings);
   });
 });
 
