@@ -19,7 +19,7 @@ var messages = "";
 fs.readFile('./words/messages.xml', function(err,data){
   var parser = new xml2js.Parser();
   parser.parseString(data, function (err, result) {
-    messages = result;
+    messages = result.text;
     console.log('Name:'+messages.ai.name);
     console.log('Greet:'+messages.greetings);
   });
