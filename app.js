@@ -95,27 +95,30 @@ function getUserInfo(senderId, requestedFields, callback){
 
 // Will welcome people
 function welcome(senderId, obj){
+  requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
+
+  greeting = "Ahoy " + obj.first_name + " ! ";
+  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
+  sendMessage(senderId, {text: message});
+}
+
+// Request API
+function requestAPI(url, apikey, auth, callback){
+  var headers = {'accept': 'application/json', 'x-apikey': apikey};
+  if(auth)
+    headers = {'accept': 'application/json', 'x-apikey': apikey, 'authorization': process.env.AUTHORIZATION};
 
   request({
-    url : "https://api.kiabi.com/v2/loyalties/500007716959",
-    headers: {
-      'accept': "application/json",
-      'x-apikey': process.env.KEY_LOYALTY,
-      'authorization': process.env.AUTHORIZATION
-    },
+    url : url,
+    headers: headers,
     method: "GET"
   }, function(error, response, body){
     if(error){
       console.log("Error api "+error);
     } else {
-      console.log("API : "+response+body);
+      console.log("API GO : "+response+body);
     }
   });
-
-
-  greeting = "Ahoy " + obj.first_name + " ! ";
-  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
-  sendMessage(senderId, {text: message});
 }
 
 // sends message to user
