@@ -99,8 +99,8 @@ function welcome(senderId, obj){
   //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
 
   greeting = "Ahoy " + obj.first_name + " ! ";
-  randomize(messages.greetings);
-  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
+  randomize(messages.text.greetings);
+  var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.text.ai.name;
   sendMessage(senderId, {text: message});
 }
 
