@@ -84,7 +84,7 @@ function processPostback(event) {
 }
 
 // Ask user info
-function getUserInfo(senderId, requestedFields){
+function getUserInfo(senderId, requestedFields, callback){
   request({
     url: "https://graph.facebook.com/v2.6/" + senderId,
     qs: {
@@ -98,9 +98,14 @@ function getUserInfo(senderId, requestedFields){
         console.log("Error getting user info: "+ error);
       } else {
         var bodyObj = JSON.parse(body);
-        return bodyObj;
+        callback(bodyObj);
       }
   });
+}
+
+function test(obj){
+  console.log("Entered");
+  console.log(obj);
 }
 
 // sends message to user
