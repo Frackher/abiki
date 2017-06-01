@@ -20,10 +20,10 @@ fs.readFile('./words/messages.xml', function(err,data){
   var parser = new xml2js.Parser();
   parser.parseString(data, function (err, result) {
     messages = result;
-    console.dir(result);
-    console.dir(messages);
-    console.log('Name:'+messages.text.ai.name);
-    console.log('Greet:'+messages.text.greetings);
+    console.log("1:"+messages.text);
+    console.log("2:"+messages.text.ai);
+    console.log("3:"+messages.text.ai.name);
+    console.log("4:"+messages.text.ai['name']);
   });
 });
 
