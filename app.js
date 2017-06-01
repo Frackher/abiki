@@ -93,11 +93,18 @@ function getUserInfo(senderId, requestedFields, callback){
 
 // Will welcome people
 function welcome(senderId, obj){
-  requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
+  //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
 
   greeting = "Ahoy " + obj.first_name + " ! ";
+  randomize(messages.greetings);
   var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
   sendMessage(senderId, {text: message});
+}
+
+function randomize(obj){
+  for each(var in obj){
+    console.log("ICI !"+var);
+  }
 }
 
 // Request API
