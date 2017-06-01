@@ -52,8 +52,8 @@ function processPostback(event) {
     console.log("I'm In !");
     // Get user's first name from the User Profile API
     // and include it in the greeting
-    var name = getUserInfo(senderId, "first_name");
-    greeting = "Ahoy " + name + " ! ";
+    var user = getUserInfo(senderId, "first_name");
+    greeting = "Ahoy " + user.first_name + " ! ";
     var message = greeting + "Bienvenue à l'agence Pirate !";
     sendMessage(senderId, {text: message});
 
