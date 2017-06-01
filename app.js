@@ -1,6 +1,8 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
+var libxml = require("libxml");
+var fs = require('fs');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -76,7 +78,14 @@ function getUserInfo(senderId, requestedFields, callback){
   });
 }
 
+// Will welcome people
 function welcome(senderId, obj){
+  fs.readFile('./words/messages.xml', function(err,data){
+    var xmlDoc = libxmljs.parseXmlString(xml);
+    console.log("XML: "+xmlDoc.ai.name);
+  });
+
+
   greeting = "Ahoy " + obj.first_name + " ! ";
   var message = greeting + "Bienvenue à l'agence Pirate !";
   sendMessage(senderId, {text: message});
