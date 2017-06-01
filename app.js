@@ -99,9 +99,9 @@ function welcome(senderId, obj){
   request({
     url : "https://api.kiabi.com/v2/loyalties/500007716959",
     headers: {
-      accept: "application/json",
-      x-apikey: process.env.KEY_LOYALTY,
-      authorization: process.env.AUTHORIZATION
+      'accept': "application/json",
+      'x-apikey': process.env.KEY_LOYALTY,
+      'authorization': process.env.AUTHORIZATION
     },
     method: "GET"
   }, function(error, response, body){
