@@ -83,7 +83,7 @@ function welcome(senderId, obj){
   fs.readFile('./words/messages.xml', function(err,data){
     var parser = new xml2js.Parser();
     parser.parseString(data, function (err, result) {
-      console.log('Name:'result.ai.name);
+      console.log('Name:'+result.ai.name);
     });
   });
 
