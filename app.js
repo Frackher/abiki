@@ -1,3 +1,7 @@
+// Config Key placed at Heroku Dashboard!
+// https://dashboard.heroku.com/apps/fast-temple-64164/settings
+
+// Requirements
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
@@ -92,6 +96,21 @@ function getUserInfo(senderId, requestedFields, callback){
 // Will welcome people
 function welcome(senderId, obj){
 
+  request({
+    url : "https://api.kiabi.com/v2/loyalties/500007716959",
+    headers: {
+      accept: "application/json",
+      x-apikey: process.env.key_loyalty,
+      authorization: process.env.authorization
+    },
+    method: "GET"
+  }, function(error, response, body){
+    if(error){
+      console.log("Error api "+error);
+    } else {
+      console.log("API : "+response+body);
+    }
+  });
 
 
   greeting = "Ahoy " + obj.first_name + " ! ";
