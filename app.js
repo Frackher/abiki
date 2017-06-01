@@ -5,8 +5,7 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-var xml2js = require('xml2js');
-var fs = require('fs');
+//var fs = require('fs');
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -14,18 +13,10 @@ app.use(bodyParser.json());
 app.listen((process.env.PORT || 5000));
 
 
-//Read the XML files
-var messages = "";
-fs.readFile('./words/messages.xml', function(err,data){
-  var parser = new xml2js.Parser();
-  parser.parseString(data, function (err, result) {
-    messages = result;
-    console.log("1:"+messages.text);
-    console.log("2:"+messages.text.ai);
-    console.log("3:"+messages.text.ai.name);
-    console.log("4:"+messages.text.ai['name']);
-  });
-});
+//Read the Json files
+var messages = require('./words/messages.json');
+console.log("1: "+messages.ai);
+console.log("2: "+messages.ai.name);
 
 // Server index page
 app.get("/", function (req, res) {
