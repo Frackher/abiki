@@ -19,6 +19,7 @@ fs.readFile('./words/messages.json', 'utf8', function (err, data) {
     if (err) throw err; // we'll not consider error handling for now
     console.dir(data);
     messages = JSON.parse(data);
+    console.dir(messages);
 });
 
 //console.log("1: "+messages.ai);
