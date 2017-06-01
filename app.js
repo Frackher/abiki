@@ -49,6 +49,8 @@ app.post("/webhook", function (req, res) {
       entry.messaging.forEach(function(event) {
         if (event.postback) {
           processPostback(event);
+        } else if (event.message) {
+          processMessage(event);
         }
       });
     });
@@ -65,6 +67,35 @@ function processPostback(event) {
   if (payload === "Greeting") {
     // Get user's first name from the User Profile API and include it in the greeting
     getUserInfo(senderId, "first_name", welcome);
+  }
+}
+
+// Processing message
+function processMessage(event) {
+  if (!event.message.is_echo) {
+      var message = event.message;
+      var senderId = event.sender.id;
+
+      console.log("Received message from senderId: " + senderId);
+      console.log("Message is: " + JSON.stringify(message));
+
+      // You may get a text or attachment but not both
+      if (message.text) {
+          var formattedMsg = message.text.toLowerCase().trim();
+
+          // If we receive a text message, check to see if it matches any special
+          // keywords and send back the corresponding movie detail.
+          // Otherwise search for new movie.
+          switch (formattedMsg) {
+              case "points":
+                sendMessage(senderId, {text: "Vous avez 39 poins"});
+                break;
+              default:
+                  sendMessage(senderId, {text: "Je ne comprends pas désolé"});
+          }
+      } else if (message.attachments) {
+          sendMessage(senderId, {text: "Sorry, I don't understand your request."});
+      }
   }
 }
 
@@ -98,21 +129,23 @@ function welcome(senderId, obj){
   sendMessage(senderId, {text: message});
 }
 
+// Choose a random content
 function randomize(obj){
   var rand = obj[Math.floor(Math.random() * obj.length)];
   return customize(rand);
 }
 
+// Customize string with var
 function customize(phrase){
-var mapObj = {
-   '#name#':customer.name,
-   '#ai.name#':messages.ai.name
-};
-phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
-  return mapObj[matched];
-});
+  var mapObj = {
+     '#name#':customer.name,
+     '#ai.name#':messages.ai.name
+  };
+  phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
+    return mapObj[matched];
+  });
 
-return phrase;
+  return phrase;
 }
 
 // Request API
