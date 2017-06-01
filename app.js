@@ -81,9 +81,11 @@ function getUserInfo(senderId, requestedFields, callback){
 // Will welcome people
 function welcome(senderId, obj){
   fs.readFile('./words/messages.xml', function(err,data){
-    var parser = new xml2js.Parser(data);
-    console.log("XML: "+parser);
-    console.dir(parser);
+    var parser = new xml2js.Parser();
+    parser.parseString(data, function (err, result) {
+        console.dir(result);
+        console.log('Done');
+    });
   });
 
 
