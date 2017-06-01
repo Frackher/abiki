@@ -105,8 +105,8 @@ function randomize(obj){
 
 function customize(phrase){
 var mapObj = {
-   #name#:customer.name,
-   #ai.name#:messages.ai.name
+   '#name#':customer.name,
+   '#ai.name#':messages.ai.name
 };
 phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
   return mapObj[matched];
