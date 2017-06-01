@@ -1,7 +1,7 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-var libxml = require("libxml");
+var xml2js = require('xml2js');
 var fs = require('fs');
 
 var app = express();
@@ -81,8 +81,8 @@ function getUserInfo(senderId, requestedFields, callback){
 // Will welcome people
 function welcome(senderId, obj){
   fs.readFile('./words/messages.xml', function(err,data){
-    var xmlDoc = libxmljs.parseXmlString(xml);
-    console.log("XML: "+xmlDoc.ai.name);
+    var parser = new xml2js.Parser(data);
+    console.log("XML: "+parser.ai.name);
   });
 
 
