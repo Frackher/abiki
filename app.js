@@ -86,13 +86,11 @@ function processMessage(event) {
           // If we receive a text message, check to see if it matches any special
           // keywords and send back the corresponding movie detail.
           // Otherwise search for new movie.
-          switch (formattedMsg) {
-              case "points":
-                sendMessage(senderId, {text: "Vous avez 39 poins"});
-                break;
-              default:
-                  sendMessage(senderId, {text: "Je ne comprends pas désolé"});
-          }
+          if(formattedMsg.match(/^(point)$/))
+            sendMessage(senderId, {text: "Vous avez 39 poins"});
+          else
+            sendMessage(senderId, {text: "Je ne comprends pas désolé"});
+            
       } else if (message.attachments) {
           sendMessage(senderId, {text: "Sorry, I don't understand your request."});
       }
