@@ -52,34 +52,7 @@ function processPostback(event) {
     console.log("I'm In !");
     // Get user's first name from the User Profile API
     // and include it in the greeting
-    var user = getUserInfo(senderId, "first_name", test);
-    console.log("Info user : "+user);
-    greeting = "Ahoy " + user.first_name + " ! ";
-    var message = greeting + "Bienvenue à l'agence Pirate !";
-    sendMessage(senderId, {text: message});
-
-/*
-    request({
-      url: "https://graph.facebook.com/v2.6/" + senderId,
-      qs: {
-        access_token: process.env.PAGE_ACCESS_TOKEN,
-        fields: "first_name"
-      },
-      method: "GET"
-    }, function(error, response, body) {
-      var greeting = "";
-      if (error) {
-        console.log("Error getting user's name: " +  error);
-      } else {
-        var bodyObj = JSON.parse(body);
-        name = bodyObj.first_name;
-        greeting = "Hi " + name + ". ";
-      }
-      var message = greeting + "Ahoy Moussaillon, Bienvenue à l'agence Pirate !";
-      sendMessage(senderId, {text: message});
-    });
-*/
-
+    getUserInfo(senderId, "first_name", welcome);
   }
 }
 
@@ -103,9 +76,10 @@ function getUserInfo(senderId, requestedFields, callback){
   });
 }
 
-function test(obj){
-  console.log("Entered");
-  console.log(obj);
+function welcome(obj){
+  greeting = "Ahoy " + obj.first_name + " ! ";
+  var message = greeting + "Bienvenue à l'agence Pirate !";
+  sendMessage(senderId, {text: message});
 }
 
 // sends message to user
