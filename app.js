@@ -14,13 +14,12 @@ app.listen((process.env.PORT || 5000));
 
 
 //Read the Json files
-var messages;
+var dataJson;
 fs.readFile('./words/messages.json', 'utf8', function (err, data) {
     if (err) throw err; // we'll not consider error handling for now
-    console.dir(data);
-    messages = JSON.parse(data);
-
+    dataJson = data;
 });
+var messages = JSON.parse(dataJson);
 console.log("Sorutoe");
 console.dir(messages);
 
