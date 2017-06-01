@@ -53,6 +53,7 @@ function processPostback(event) {
     // Get user's first name from the User Profile API
     // and include it in the greeting
     var user = getUserInfo(senderId, "first_name");
+    console.log("Info user : "+user);
     greeting = "Ahoy " + user.first_name + " ! ";
     var message = greeting + "Bienvenue à l'agence Pirate !";
     sendMessage(senderId, {text: message});
@@ -96,9 +97,6 @@ function getUserInfo(senderId, requestedFields){
       if(error) {
         console.log("Error getting user info: "+ error);
       } else {
-        console.log(error);
-        console.log(response);
-        console.log(body);
         var bodyObj = JSON.parse(body);
         return bodyObj;
       }
