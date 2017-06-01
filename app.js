@@ -96,6 +96,9 @@ function getUserInfo(senderId, requestedFields){
       if(error) {
         console.log("Error getting user info: "+ error);
       } else {
+        console.log(error);
+        console.log(response);
+        console.log(body);
         var bodyObj = JSON.parse(body);
         return bodyObj;
       }
