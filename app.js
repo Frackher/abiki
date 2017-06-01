@@ -14,17 +14,9 @@ app.listen((process.env.PORT || 5000));
 
 
 //Read the Json files
-var dataJson;
-fs.readFile('./words/messages.json', 'utf8', function (err, data) {
-    if (err) throw err; // we'll not consider error handling for now
-    dataJson = data;
-});
-var messages = JSON.parse(dataJson);
+var messages = JSON.parse(fs.readFileSync('./words/messages.json', 'utf8'));
 console.log("Sorutoe");
 console.dir(messages);
-
-//console.log("1: "+messages.ai);
-//console.log("2: "+messages.ai.name);
 
 // Server index page
 app.get("/", function (req, res) {
