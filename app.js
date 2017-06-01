@@ -85,6 +85,8 @@ function welcome(senderId, obj){
     console.log("Data FS"+data);
     var parser = new xml2js.Parser();
     parser.parseString(data, function (err, result) {
+      console.log('Error'+err);
+      console.log('Result'+result);
         console.dir(result);
         console.log('Done');
     });
