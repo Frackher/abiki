@@ -7,6 +7,9 @@ var request = require("request");
 var bodyParser = require("body-parser");
 var fs = require('fs');
 
+// Customer
+var customer = {"name":""};
+
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -88,19 +91,21 @@ function getUserInfo(senderId, requestedFields, callback){
 // Will welcome people
 function welcome(senderId, obj){
   //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
+  // Save customer name
+  customer.name = obj.first_name
 
-  greeting = "Ahoy " + obj.first_name + " ! ";
+
+
+  greeting = "Ahoy " + customer.name + " ! ";
   randomize(messages.greetings);
   var message = greeting + "Bienvenue à l'agence Pirate ! je m'apelle "+messages.ai.name;
   sendMessage(senderId, {text: message});
 }
 
 function randomize(obj){
-  console.log('Here :'+obj)
-  for (var i in obj) {
-    val = obj[i];
-    console.log("ICI ! "+val);
-  }
+  var rand = obj[Math.floor(Math.random() * obj.length)];
+  console.log("Rand"+rand);
+  console.log("Phrase"+obj[rand]);
 }
 
 // Request API
