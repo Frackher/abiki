@@ -23,7 +23,9 @@
     "emailFound" : ["J'ai trouvé ! je cherche vos points..."],
     "points": ["#name# vous avez #points# points","Votre solde de points est de #points# points"],
     "produit": ["Merci je recherche votre produit #produit#...", "Alors le #produit#, j'ai du le ranger par ici."],
-    "leproduit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"]
+    "leproduit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"],
+    "magCP": ["Merci, je recherche via votre code #magCP#, un instant.", "Alors à cet endroit..."],
+    "magVille": ["#magVille# ? Mais je connais très bien ! le plus proche magasin...", "Un instant je recherche le magasin le plus proche de #magVille#"]
   },
   "erreurs" : {
     "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
