@@ -25,6 +25,8 @@
   "erreurs" : {
     "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
     "noemail" : ["Votre email ne semble pas être présent chez nous, désolé.", "#name# désolé mais votre email #email# est incorrect, pouvez-vous le resaisir ? :)"],
-    "noproduct": ["J'ai eu beau chercher mais je n'ai rien trouvé :/.", "Olà je pense qu'il doit y avoir une petite erreur, pouvez-vous me redonner le code ? Merci ;)"]
+    "noproduct": ["J'ai eu beau chercher mais je n'ai rien trouvé :/.", "Olà je pense qu'il doit y avoir une petite erreur, pouvez-vous me redonner le code ? Merci ;)"],
+    "noFidnoEmail" : ["#name# il faut que ce soit dans l'un des formats précisés.", "Il semble que je ne puisse pas effectuer cette recherche :(","Vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 12 chiffres."],
+    "noCode" : ["Malheureusement #name# je ne reconnais pas ce code.", "Désolé mais ce format m'est inconnu :'("]
   }
 }

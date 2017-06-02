@@ -88,6 +88,15 @@ function processMessage(event) {
       if (message.text) {
           var formattedMsg = message.text.toLowerCase().trim();
 
+          //Will chech first if the person is correct with Abiki
+          for (var i = 0; i < badwords.insultes.length; i++) {
+            var regEx = new RegExp(badwords.insultes[i], "gi");
+            if(formattedMsg.match(regEx)
+              console.log("INSULTES");
+          }
+
+          //badwords.sexe
+
           // If we receive a text message, check to see if it matches any special
           // keywords and send back the corresponding movie detail.
           // Otherwise search for new movie.
@@ -111,6 +120,9 @@ function processMessage(event) {
               sendMessage(senderId, {text: randomize(messages.reponses.email)});
               requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":customer.email}, catchFidByEmail);
 
+            } else {
+              //Bad input
+              sendMessage(senderId, {text: randomize(messages.erreurs.noFidnoEmail)});
             }
           }
           else if (formattedMsg.match(/(produit)/) && !flags.produit){
@@ -125,6 +137,10 @@ function processMessage(event) {
               product.id = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.produit)});
               requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_STYLES, false, showProduct);
+            }
+            else {
+              //Bad input
+              sendMessage(senderId, {text: randomize(messages.erreurs.noCode)});
             }
           }
           //Bon là on comprends plus trop la demande
