@@ -106,7 +106,7 @@ function processMessage(event) {
               //Customer Email
               customer.email = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.email)});
-              requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":+customer.email}, catchFidByEmail);
+              requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":customer.email}, catchFidByEmail);
 
             }
           }
