@@ -21,8 +21,7 @@ app.listen((process.env.PORT || 5000));
 
 //Read the Json files
 var messages = JSON.parse(fs.readFileSync('./words/messages.json', 'utf8'));
-console.log("Sorutoe");
-console.dir(messages);
+var badwords = JSON.parse(fs.readFileSync('./words/badwords.json', 'utf8'));
 
 // Server index page
 app.get("/", function (req, res) {
@@ -96,8 +95,13 @@ function processMessage(event) {
           //Asked for points
           if(flags.points){
             console.log("Flag ON 2");
-            if(re = formattedMsg.match(/\d{12}/))
-              console.log("Its a match"+re[0]);
+            if(re = formattedMsg.match(/\d{12}/)){
+              //Loyalty number
+              sendMessage(senderId, {text: "Votre carte : "+re[0]});
+            } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+              //Customer Email
+              sendMessage(senderId, {text: "Votre email : "+re[0]});
+            }
           }
 
           else
