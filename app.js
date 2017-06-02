@@ -219,7 +219,7 @@ function completeAdress(data, ville){
 // Show adress
 function showAdress(obj){
   console.log('Show adress');
-  obj = JSON.parse(obj);
+  //obj = JSON.parse(obj);
 
   if(typeof obj[0] == "undefined")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.nomag)});
@@ -248,7 +248,7 @@ function showAdress(obj){
 //Show product
 function showProduct(obj){
   console.log('Show product');
-  //obj = JSON.parse(obj);
+  obj = JSON.parse(obj);
 
   if(obj.error == "not_found")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.noproduct)});
