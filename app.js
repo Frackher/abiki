@@ -124,7 +124,7 @@ function processMessage(event) {
 function catchFidByEmail(obj){
   obj = JSON.parse(obj);
 
-  if(obj.loyalties.cardNumber == undefined)
+  if(typeof obj.loyalties.cardNumber == "undefined")
     console.log("pas de email");
   else {
     console.log(obj.loyalties.cardNumber);
