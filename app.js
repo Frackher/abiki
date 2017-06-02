@@ -123,6 +123,9 @@ function processMessage(event) {
 
 // Search points
 function searchPoints(obj){
+  console.log("Objet");
+  console.log(obj);
+  console.dir(obj);
   if(obj.error == "not_found")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.nofid)});
   else {
