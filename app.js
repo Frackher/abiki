@@ -10,6 +10,7 @@ var fs = require('fs');
 // Customer
 var customer = {"name":"","loyalty":"","email":"","chatId":"","points":""};
 var product = {"id":""};
+var magasin = {"cp":"", "ville":""};
 
 //Flags
 var flags = {"points":false, "produit":false, "magasin":false, "badwords":0, "blocked":false};
@@ -163,6 +164,26 @@ function processMessage(event) {
                 sendMessage(senderId, {text: randomize(messages.erreurs.noCode)});
               }
             }
+            else if (formattedMsg.match(/(magasin)/) && !flags.magasin){
+              flags.points = false;
+              flags.magasin = true;
+              flags.produit = false;
+              sendMessage(senderId, {text: messages.questions.magasin});
+            }
+            else if(flags.magasin){
+              if(re = formattedMsg.match(/\d{5}/)){
+                magasin.cp = re[0];
+                sendMessage(senderId, {text: randomize(messages.reponses.magCP)});
+                completeAdress(magasin.cp, false);
+              } else if (re = formattedMsg.match(/\w{2,35}/)) {
+                magasin.ville = re[0];
+                sendMessage(senderId, {text: randomize(messages.reponses.magVille)});
+                completeAdress(magasin.ville, true);
+              } else {
+                //Bad input
+                sendMessage(senderId, {text: randomize(messages.erreurs.noMagasin)});
+              }
+            }
             //Bon là on comprends plus trop la demande
             else
               sendMessage(senderId, {text: randomize(messages.comprendspas)});
@@ -172,6 +193,35 @@ function processMessage(event) {
           sendMessage(senderId, {text: randomize(messages.pj)});
       }
   }
+}
+
+//completeAdress
+function completeAdress(data, ville){
+  request({
+    url: "https://vicopo.selfbuild.fr/cherche/" + data,
+    method: "GET"
+    }, function(error, response, body){
+      //manage answers
+      if(error) {
+        console.log("Error getting location info: "+ error);
+      } else {
+        var bodyObj = JSON.parse(body);
+        if(ville){
+          var body = {"country": "FRANCE", "locality": data,"postalCode": bodyObj.cities[0].code};
+        } else {
+          var body = {"country": "FRANCE", "locality": bodyObj.cities[0].city,"postalCode": data};
+        }
+        requestAPIPost('https://api.kiabi.com/v1/stores/find_nearest', process.env.KEY_STORE, body, showAdress);
+      }
+  });
+}
+
+// Show adress
+function showAdress(obj){
+  console.log('Show adress');
+  obj = JSON.parse(obj);
+
+  console.dir(obj);
 }
 
 //Show product
@@ -277,9 +327,11 @@ function customize(phrase){
      '#cartefid#':customer.loyalty,
      '#email#':customer.email,
      '#points#':customer.points,
-     '#produit#':product.id
+     '#produit#':product.id,
+     '#magCP#':magasin.cp,
+     '#magVille#':magasin.ville
   };
-  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#|#produit#/gi, function(matched){
+  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#|#produit#|#magCP#|#magVille#/gi, function(matched){
     return mapObj[matched];
   });
 
@@ -322,6 +374,26 @@ function requestAPIQs(url, apikey, auth, qs, callback){
       console.log("Error api "+error);
     } else {
       console.log("APIQS GO : ");
+      console.dir(response);
+      console.dir(body);
+      callback(body)
+    }
+  });
+}
+
+//Request API POST
+function requestAPIPost(url, apikey, body, callback){
+  var headers = {'accept': 'application/json', 'x-apikey': apikey};
+  request({
+    url : url,
+    headers: headers,
+    body : body,
+    method: "POST"
+  }, function(error, response, body){
+    if(error){
+      console.log("Error post api "+error);
+    } else {
+      console.log("APIPOST GO : ");
       console.dir(response);
       console.dir(body);
       callback(body)
