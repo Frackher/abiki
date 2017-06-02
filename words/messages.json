@@ -26,7 +26,7 @@
     "leproduit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"],
     "magCP": ["Merci, je recherche via votre code #magCP#, un instant.", "Alors à cet endroit..."],
     "magVille": ["#magVille# ? Mais je connais très bien ! le plus proche magasin...", "Un instant je recherche le magasin le plus proche de #magVille#"],
-    "leproduit": ["Voici le magasin le plus proche", "J'y vais souvent aussi ^^ !"]
+    "lemagasin": ["Voici le magasin le plus proche", "J'y vais souvent aussi ^^ !"]
   },
   "erreurs" : {
     "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
