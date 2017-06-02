@@ -388,8 +388,9 @@ function requestAPIPost(url, apikey, body, callback){
   request({
     url : url,
     headers: headers,
-    body : body,
-    method: "POST"
+    json : true,
+    method: "POST",
+    body : body
   }, function(error, response, body){
     if(error){
       console.log("Error post api "+error);
