@@ -248,7 +248,7 @@ function showAdress(obj){
 //Show product
 function showProduct(obj){
   console.log('Show product');
-  obj = JSON.parse(obj);
+  //obj = JSON.parse(obj);
 
   if(obj.error == "not_found")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.noproduct)});
