@@ -126,7 +126,7 @@ function catchFidByEmail(obj){
   obj = JSON.parse(obj);
   console.log("After parse");
 
-  if(typeof obj[0].loyalties == "undefined")
+  if(typeof obj[0] == "undefined")
     console.log("pas de email");
   else {
     console.log(obj[0].loyalties[0].cardNumber);
