@@ -99,10 +99,15 @@ function processMessage(event) {
               //Loyalty number
               customer.loyalty = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.carte)});
+              requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true);
+
+              //searchPoints(customer.loyalty, false);
             } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
               //Customer Email
               customer.email = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.email)});
+
+              //searchPoints(customer.email, true);
             }
           }
 
@@ -114,6 +119,18 @@ function processMessage(event) {
       }
   }
 }
+
+// Search points
+/*
+function searchPoints(search, email){
+  if(!email){
+    //loyalty
+
+  } else {
+    //email
+  }
+}
+*/
 
 // Ask user info
 function getUserInfo(senderId, requestedFields, callback){
