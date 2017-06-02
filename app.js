@@ -148,6 +148,7 @@ function showProduct(obj){
     //customer.points = obj.points;
     sendMessage(customer.chatId, {text: randomize(messages.reponses.leproduit)});
     var randCo = obj.colors[Math.floor(Math.random() * obj.colors.length)];
+    console.log("Image"+randCo);
     message = {
       attachment: {
         type: "template",
@@ -156,7 +157,7 @@ function showProduct(obj){
           elements: [{
             title: obj.shortTitle,
             subtitle: obj.description,
-            image_url: randCo === "N/A" ? "http://placehold.it/350x150" : randCo
+            image_url: randCo+"?apikey=HACKATHON"
           }]
         }
       }
@@ -292,16 +293,16 @@ function requestAPIQs(url, apikey, auth, qs, callback){
 // sends message to user
 function sendMessage(recipientId, message) {
   request({
-    url: "https://graph.facebook.com/v2.6/me/messages",
-    qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-    method: "POST",
-    json: {
-      recipient: {id: recipientId},
-      message: message,
-    }
+      url: "https://graph.facebook.com/v2.6/me/messages",
+      qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+      method: "POST",
+      json: {
+          recipient: {id: recipientId},
+          message: message,
+      }
   }, function(error, response, body) {
-    if (error) {
-      console.log("Error sending message: " + response.error);
-    }
+      if (error) {
+          console.log("Error sending message: " + response.error);
+      }
   });
 }
