@@ -129,7 +129,7 @@ function catchFidByEmail(obj){
   if(typeof obj[0].loyalties == "undefined")
     console.log("pas de email");
   else {
-    console.log(obj[0].loyalties.cardNumber);
+    console.log(obj[0].loyalties[0].cardNumber);
   }
 }
 
