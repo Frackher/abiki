@@ -122,6 +122,7 @@ function processMessage(event) {
 
 //Catch fidelity by email
 function catchFidByEmail(obj){
+  console.log('Catch Fidelity');
   obj = JSON.parse(obj);
   obj = JSON.parse(obj[0]);
 
@@ -232,7 +233,8 @@ function requestAPIQs(url, apikey, auth, qs, callback){
     if(error){
       console.log("Error api "+error);
     } else {
-      console.log("APIQS GO : "+response+body);
+      console.log("APIQS GO : ");
+      console.dir(response);
       console.dir(body);
       callback(body)
     }
