@@ -124,7 +124,7 @@ function processMessage(event) {
               //Sku Number
               product.id = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.produit)});
-              requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_PRODUCT, false, showProduct);
+              requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_STYLES, false, showProduct);
             }
           }
           //Bon là on comprends plus trop la demande
@@ -236,9 +236,10 @@ function customize(phrase){
      '#ai.name#':messages.ai.name,
      '#cartefid#':customer.loyalty,
      '#email#':customer.email,
-     '#points#':customer.points
+     '#points#':customer.points,
+     '#produit#':product.id
   };
-  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#/gi, function(matched){
+  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#|#produit#/gi, function(matched){
     return mapObj[matched];
   });
 
