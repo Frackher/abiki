@@ -102,13 +102,12 @@ function processMessage(event) {
               sendMessage(senderId, {text: randomize(messages.reponses.carte)});
               requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
 
-              //searchPoints(customer.loyalty, false);
             } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
               //Customer Email
               customer.email = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.email)});
+              requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":+customer.email}, catchFidByEmail);
 
-              //searchPoints(customer.email, true);
             }
           }
 
@@ -121,13 +120,21 @@ function processMessage(event) {
   }
 }
 
+//Catch fidelity by email
+function catchFidByEmail(obj){
+  obj = JSON.parse(obj);
+
+  if(obj.loyalties.cardNumer == undefined)
+    console.log("pas de email");
+  else {
+    console.log(obj.loyalties.cardNumer);
+  }
+}
+
 // Search points
 function searchPoints(obj){
   obj = JSON.parse(obj);
-  console.log("Objet");
-  console.log(obj);
-  console.dir(obj);
-  console.log(obj.error);
+
   if(obj.error == "not_found")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.nofid)});
   else {
@@ -204,6 +211,27 @@ function requestAPI(url, apikey, auth, callback){
       console.log("Error api "+error);
     } else {
       console.log("API GO : "+response+body);
+      callback(body)
+    }
+  });
+}
+
+// Request API
+function requestAPIQs(url, apikey, auth, qs, callback){
+  var headers = {'accept': 'application/json', 'x-apikey': apikey};
+  if(auth)
+    headers = {'accept': 'application/json', 'x-apikey': apikey, 'authorization': process.env.AUTHORIZATION};
+
+  request({
+    url : url,
+    headers: headers,
+    qs : qs,
+    method: "GET"
+  }, function(error, response, body){
+    if(error){
+      console.log("Error api "+error);
+    } else {
+      console.log("APIQS GO : "+response+body);
       callback(body)
     }
   });
