@@ -221,7 +221,28 @@ function showAdress(obj){
   console.log('Show adress');
   obj = JSON.parse(obj);
 
-  console.dir(obj);
+  if(obj.error == "not_found")
+    sendMessage(customer.chatId, {text: randomize(messages.erreurs.nomag)});
+  else {
+    //customer.points = obj.points;
+    sendMessage(customer.chatId, {text: randomize(messages.reponses.lemagasin)});
+    message = {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: obj[0].store.name,
+            subtitle: obj[0].store.adress.adressLine1
+          }]
+        }
+      }
+    };
+    sendMessage(customer.chatId, message);
+
+    flags.magasin = false;
+  }
+
 }
 
 //Show product
