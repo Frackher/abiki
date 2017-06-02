@@ -97,10 +97,12 @@ function processMessage(event) {
             console.log("Flag ON 2");
             if(re = formattedMsg.match(/\d{12}/)){
               //Loyalty number
-              sendMessage(senderId, {text: "Votre carte : "+re[0]});
+              customer.loyalty = re[0];
+              sendMessage(senderId, {text: randomize(messages.reponses.carte)};
             } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
               //Customer Email
-              sendMessage(senderId, {text: "Votre email : "+re[0]});
+              customer.email = re[0];
+              sendMessage(senderId, {text: randomize(messages.reponses.email)};
             }
           }
 
@@ -153,7 +155,9 @@ function randomize(obj){
 function customize(phrase){
   var mapObj = {
      '#name#':customer.name,
-     '#ai.name#':messages.ai.name
+     '#ai.name#':messages.ai.name,
+     '#cartefid#':customer.loyalty,
+     '#email#':customer.email
   };
   phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
     return mapObj[matched];
