@@ -417,6 +417,7 @@ function requestAPIPost(url, apikey, body, callback){
       console.log("Error post api "+error);
     } else {
       console.log("APIPOST GO : ");
+      console.dir(body);
       callback(body)
     }
   });
