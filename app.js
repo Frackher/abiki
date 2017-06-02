@@ -93,7 +93,7 @@ function processMessage(event) {
             var regEx = new RegExp(badwords.insultes[i], "gi");
             if(formattedMsg.match(regEx)){
               console.log("insultes");
-              sendMessage(senderId, {text: randomize(ai.angry)});
+              sendMessage(senderId, {text: randomize(messages.ai.angry)});
               flags.badwords++;
             }
           }
@@ -102,7 +102,7 @@ function processMessage(event) {
             var regEx = new RegExp(badwords.sexe[i], "gi");
             if(formattedMsg.match(regEx)){
               console.log("sexe");
-              sendMessage(senderId, {text: randomize(ai.angry)});
+              sendMessage(senderId, {text: randomize(messages.ai.angry)});
               flags.badwords++;
             }
           }
