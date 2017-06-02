@@ -232,6 +232,7 @@ function requestAPIQs(url, apikey, auth, qs, callback){
       console.log("Error api "+error);
     } else {
       console.log("APIQS GO : "+response+body);
+      console.dir(body);
       callback(body)
     }
   });
