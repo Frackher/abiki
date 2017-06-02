@@ -12,7 +12,7 @@ var customer = {"name":"","loyalty":"","email":"","chatId":"","points":""};
 var product = {"id":""};
 
 //Flags
-var flags = {"points":false, "produit":false, "magasin":false, "blocked":false};
+var flags = {"points":false, "produit":false, "magasin":false, "badwords":0, "blocked":false};
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -92,12 +92,20 @@ function processMessage(event) {
           for (var i = 0; i < badwords.insultes.length; i++) {
             var regEx = new RegExp(badwords.insultes[i], "gi");
             if(formattedMsg.match(regEx)){
-              console.log("INSULTES");
+              console.log("insultes");
+              sendMessage(senderId, {text: randomize(ai.angry)});
+              flags.badwords++;
             }
-
           }
 
-          //badwords.sexe
+          for (var i = 0; i < badwords.sexe.length; i++) {
+            var regEx = new RegExp(badwords.sexe[i], "gi");
+            if(formattedMsg.match(regEx)){
+              console.log("sexe");
+              sendMessage(senderId, {text: randomize(ai.angry)});
+              flags.badwords++;
+            }
+          }
 
           // If we receive a text message, check to see if it matches any special
           // keywords and send back the corresponding movie detail.
