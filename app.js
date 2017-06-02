@@ -96,7 +96,7 @@ function processMessage(event) {
           //Asked for points
           if(flags.points){
             console.log("Flag ON 2");
-            if(formattedMsg.match(/(\d{12l})/))
+            if(re = formattedMsg.match(/\d{12}/))
               console.log("Its a match"+re[1]);
           }
 
