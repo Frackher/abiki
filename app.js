@@ -233,7 +233,7 @@ function showAdress(obj){
           template_type: "generic",
           elements: [{
             title: obj[0].store.name,
-            subtitle: obj[0].store.adress.adressLine1
+            subtitle: obj[0].store.address.addressLine1
           }]
         }
       }
