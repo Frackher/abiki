@@ -115,7 +115,7 @@ function processMessage(event) {
             sendMessage(senderId, {text: randomize(messages.ai.block)});
             flags.blocked = true;
           }
-        
+
           if(!insultant && !flags.blocked){
             // If we receive a text message, check to see if it matches any special
             // keywords and send back the corresponding movie detail.
@@ -256,6 +256,7 @@ function welcome(senderId, obj){
   //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
   // Save customer name
   flags.blocked = false;
+  flags.badwords = 0;
   customer.name = obj.first_name
 
   var message = randomize(messages.greetings);
