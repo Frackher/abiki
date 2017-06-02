@@ -9,9 +9,10 @@ var fs = require('fs');
 
 // Customer
 var customer = {"name":"","loyalty":"","email":"","chatId":"","points":""};
+var product = {"id":""};
 
 //Flags
-var flags = {"points":false};
+var flags = {"points":false, "produit":false, "magasin":false, "blocked":false};
 
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
@@ -90,19 +91,21 @@ function processMessage(event) {
           // If we receive a text message, check to see if it matches any special
           // keywords and send back the corresponding movie detail.
           // Otherwise search for new movie.
-          if(formattedMsg.match(/(point)/)){
+          if(formattedMsg.match(/(point)/) && !flags.points){
+            flags.magasin = false;
+            flags.produit = false;
             flags.points = true;
             sendMessage(senderId, {text: messages.questions.points});
           }
           //Asked for points
-          if(flags.points){
+          else if(flags.points){
             if(re = formattedMsg.match(/\d{12}/)){
               //Loyalty number
               customer.loyalty = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.carte)});
               requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
 
-            } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
+            } else if (re = formattedMsg.match(/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/)) {
               //Customer Email
               customer.email = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.email)});
@@ -110,13 +113,57 @@ function processMessage(event) {
 
             }
           }
-
+          else if (formattedMsg.match(/(produit)/) && !flags.produit){
+            flags.points = false;
+            flags.magasin = false;
+            flags.produit = true;
+            sendMessage(senderId, {text: messages.questions.produit});
+          }
+          else if (flags.produit) {
+            if (re = formattedMsg.match(/\d{13}/)){
+              //Sku Number
+              product.id = re[0];
+              sendMessage(senderId, {text: randomize(messages.reponses.produit)});
+              requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_PRODUCT, false, showProduct);
+            }
+          }
+          //Bon là on comprends plus trop la demande
           else
             sendMessage(senderId, {text: randomize(messages.comprendspas)});
 
       } else if (message.attachments) {
-          sendMessage(senderId, {text: "Sorry, I don't understand your request."});
+          sendMessage(senderId, {text: randomize(messages.pj)});
       }
+  }
+}
+
+//Show product
+function showProduct(obj){
+  console.log('Show product');
+  obj = JSON.parse(obj);
+
+  if(obj.error == "not_found")
+    sendMessage(customer.chatId, {text: randomize(messages.erreurs.noproduct)});
+  else {
+    //customer.points = obj.points;
+    sendMessage(customer.chatId, {text: randomize(messages.reponses.leproduit)});
+    var randCo = obj.colors[Math.floor(Math.random() * obj.colors.length)];
+    message = {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: obj.shortTitle,
+            subtitle: obj.description,
+            image_url: randCo === "N/A" ? "http://placehold.it/350x150" : randCo
+          }]
+        }
+      }
+    };
+    sendMessage(customer.chatId, message);
+
+    flags.product = false;
   }
 }
 
