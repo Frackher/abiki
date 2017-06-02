@@ -10,6 +10,9 @@ var fs = require('fs');
 // Customer
 var customer = {"name":""};
 
+//Flags
+var flags = {"points":false};
+
 var app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -86,10 +89,18 @@ function processMessage(event) {
           // If we receive a text message, check to see if it matches any special
           // keywords and send back the corresponding movie detail.
           // Otherwise search for new movie.
-          if(formattedMsg.match(/(point)/))
-            sendMessage(senderId, {text: "Vous avez 39 points"});
+          if(formattedMsg.match(/(point)/)){
+            flags.points = true;
+            sendMessage(senderId, {text: messages.questions.points});
+          }
+          //Asked for points
+          if(flags.points){
+            if(var re = formattedMsg.match(/\d{12l}/))
+              console.log(re[1]);
+          }
+
           else
-            sendMessage(senderId, {text: "Je ne comprends pas désolé"});
+            sendMessage(senderId, {text: randomize(messages.comprendspas)});
 
       } else if (message.attachments) {
           sendMessage(senderId, {text: "Sorry, I don't understand your request."});

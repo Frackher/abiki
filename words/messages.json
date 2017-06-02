@@ -6,5 +6,10 @@
     "town": "Villeneuve d'Ascq"
   },
   "greetings" : ["Hello #name#, je m'appelle #ai.name# et je suis votre conseillère virtuelle :)",
-    "Bonjour #name#, comment allez-vous ? Mon nom est #ai.name#, en quoi puis-je vous aider ?"]
+    "Bonjour #name#, comment allez-vous ? Mon nom est #ai.name#, en quoi puis-je vous aider ?"],
+  "comprendspas" : ["Excusez-moi, mais je ne comprends pas votre demande...",
+    "Pardon, pouvez-vous répeter ?", "Je suis navrée, mais je crains de ne pas savoir quoi vous répondre"],
+  "questions" : {
+    "points" : "Pour connaitre votre nombre de points, vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 13 chiffres."
+  }
 }
