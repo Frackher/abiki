@@ -111,10 +111,11 @@ function processMessage(event) {
             }
           }
 
-          if(flags.badwords>4)
+          if(flags.badwords>4){
             sendMessage(senderId, {text: randomize(messages.ai.block)});
             flags.blocked = true;
-
+          }
+        
           if(!insultant && !flags.blocked){
             // If we receive a text message, check to see if it matches any special
             // keywords and send back the corresponding movie detail.
