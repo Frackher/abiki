@@ -214,7 +214,7 @@ function completeAdress(data, ville){
               cp = bodyObj.cities[i].code;
             }
           }
-          var body = {"country": "FRANCE", "locality": data,"postalCode": cp};
+          var body = {"country": "FRANCE", "locality": data,"postalCode": cp.toString()};
         } else {
           //Default no null
           city = bodyObj.cities[0].city;
