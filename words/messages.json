@@ -20,7 +20,7 @@
     "emailFound" : ["J'ai trouvé ! je cherche vos points..."],
     "points": ["#name# vous avez #points# points","Votre solde de points est de #points# points"],
     "produit": ["Merci je recherche votre produit #produit#...", "Alors le #produit#, j'ai du le ranger par ici."],
-    "le produit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"]
+    "leproduit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"]
   },
   "erreurs" : {
     "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
