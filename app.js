@@ -123,6 +123,7 @@ function processMessage(event) {
 
 // Search points
 function searchPoints(obj){
+  obj = JSON.parse(obj);
   console.log("Objet");
   console.log(obj);
   console.dir(obj);
