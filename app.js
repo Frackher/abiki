@@ -8,7 +8,7 @@ var bodyParser = require("body-parser");
 var fs = require('fs');
 
 // Customer
-var customer = {"name":""};
+var customer = {"name":"","loyalty":"","email":""};
 
 //Flags
 var flags = {"points":false};
