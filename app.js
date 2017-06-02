@@ -8,7 +8,7 @@ var bodyParser = require("body-parser");
 var fs = require('fs');
 
 // Customer
-var customer = {"name":"","loyalty":"","email":""};
+var customer = {"name":"","loyalty":"","email":"","chatId":"","points":""};
 
 //Flags
 var flags = {"points":false};
@@ -64,6 +64,7 @@ app.post("/webhook", function (req, res) {
 // Processing Postback answer
 function processPostback(event) {
   var senderId = event.sender.id;
+  customer.chatId = event.sender.id;
   var payload = event.postback.payload;
 
   if (payload === "Greeting") {
@@ -94,12 +95,11 @@ function processMessage(event) {
           }
           //Asked for points
           if(flags.points){
-            console.log("Flag ON 2");
             if(re = formattedMsg.match(/\d{12}/)){
               //Loyalty number
               customer.loyalty = re[0];
               sendMessage(senderId, {text: randomize(messages.reponses.carte)});
-              requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true);
+              requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
 
               //searchPoints(customer.loyalty, false);
             } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
@@ -121,16 +121,15 @@ function processMessage(event) {
 }
 
 // Search points
-/*
-function searchPoints(search, email){
-  if(!email){
-    //loyalty
-
-  } else {
-    //email
+function searchPoints(obj){
+  if(obj.error == "not_found")
+    sendMessage(customer.chatId, {text: randomize(messages.erreurs.nofid)});
+  else {
+    customer.points = obj.points;
+    sendMessage(customer.chatId, {text: randomize(messages.reponses.points)});
+    flags.points = false;
   }
 }
-*/
 
 // Ask user info
 function getUserInfo(senderId, requestedFields, callback){
@@ -174,9 +173,10 @@ function customize(phrase){
      '#name#':customer.name,
      '#ai.name#':messages.ai.name,
      '#cartefid#':customer.loyalty,
-     '#email#':customer.email
+     '#email#':customer.email,
+     '#points#':customer.points
   };
-  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#/gi, function(matched){
+  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#/gi, function(matched){
     return mapObj[matched];
   });
 
@@ -198,8 +198,7 @@ function requestAPI(url, apikey, auth, callback){
       console.log("Error api "+error);
     } else {
       console.log("API GO : "+response+body);
-      console.dir(response);
-      //callback()
+      callback(body)
     }
   });
 }
