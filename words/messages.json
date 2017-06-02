@@ -15,9 +15,11 @@
   "reponses" : {
     "carte" : ["Merci #name#, je recherche avec votre numéro #cartefid#","Un instant je regarde avec le numéro #cartefid#"],
     "email" : ["Merci #name#, je vais vérifier votre email #email#...","Un tout petit instant, que je consulte votre email #email#"],
+    "emailFound" : ["J'ai trouvé ! je cherche vos points..."],
     "points": ["#name# vous avez #points# points","Votre solde de points est de #points# points"]
   },
   "erreurs" : {
-    "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."]
+    "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
+    "noemail" : ["Votre email ne semble pas être présent chez nous, désolé.", "#name# désolé mais votre email #email# est incorrect, pouvez-vous le resaisir ? :)"]
   }
 }

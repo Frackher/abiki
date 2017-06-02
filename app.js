@@ -124,12 +124,12 @@ function processMessage(event) {
 function catchFidByEmail(obj){
   console.log('Catch Fidelity');
   obj = JSON.parse(obj);
-  console.log("After parse");
 
   if(typeof obj[0] == "undefined")
-    console.log("pas de email");
+    sendMessage(customer.chatId, {text: randomize(messages.erreurs.noemail)});
   else {
-    console.log(obj[0].loyalties[0].cardNumber);
+    sendMessage(customer.chatId, {text: randomize(messages.reponses.emailFound)});
+    requestAPI('https://api.kiabi.com/v2/loyalties/'+obj[0].loyalties[0].cardNumber, process.env.KEY_LOYALTY, true, searchPoints);
   }
 }
 
