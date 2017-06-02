@@ -122,7 +122,7 @@ function processMessage(event) {
 
 //Catch fidelity by email
 function catchFidByEmail(obj){
-  obj = JSON.parse(obj);
+  obj = JSON.parse(obj[0]);
 
   if(typeof obj.loyalties == "undefined")
     console.log("pas de email");
