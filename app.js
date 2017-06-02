@@ -98,11 +98,11 @@ function processMessage(event) {
             if(re = formattedMsg.match(/\d{12}/)){
               //Loyalty number
               customer.loyalty = re[0];
-              sendMessage(senderId, {text: randomize(messages.reponses.carte)};
+              sendMessage(senderId, {text: randomize(messages.reponses.carte)});
             } else if (re = formattedMsg.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)) {
               //Customer Email
               customer.email = re[0];
-              sendMessage(senderId, {text: randomize(messages.reponses.email)};
+              sendMessage(senderId, {text: randomize(messages.reponses.email)});
             }
           }
 
