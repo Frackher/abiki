@@ -176,7 +176,7 @@ function processMessage(event) {
                 sendMessage(senderId, {text: randomize(messages.reponses.magCP)});
                 completeAdress(magasin.cp, false);
               } else if (re = formattedMsg.match(/\w{2,35}/)) {
-                magasin.ville = re[0].toLowerCase();
+                magasin.ville = re[0];
                 sendMessage(senderId, {text: randomize(messages.reponses.magVille)});
                 completeAdress(magasin.ville, true);
               } else {
@@ -210,16 +210,18 @@ function completeAdress(data, ville){
           //Default no null
           cp = bodyObj.cities[0].code;
           for (var i = 0; i < bodyObj.cities.length; i++) {
-            if(bodyObj.cities[i].city == data.toLowerCase())
-            cp = bodyObj.cities[i].code;
+            if(bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()){
+              cp = bodyObj.cities[i].code;
+            }
           }
           var body = {"country": "FRANCE", "locality": data,"postalCode": cp};
         } else {
           //Default no null
           city = bodyObj.cities[0].city;
           for (var i = 0; i < bodyObj.cities.length; i++) {
-            if(bodyObj.cities[i].code == data)
-            city = bodyObj.cities[i].city;
+            if(bodyObj.cities[i].code == data){
+              city = bodyObj.cities[i].city;
+            }
           }
           var body = {"country": "FRANCE", "locality": city,"postalCode": data};
         }
