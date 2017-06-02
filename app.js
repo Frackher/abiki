@@ -198,6 +198,8 @@ function requestAPI(url, apikey, auth, callback){
       console.log("Error api "+error);
     } else {
       console.log("API GO : "+response+body);
+      console.dir(response);
+      //callback()
     }
   });
 }
