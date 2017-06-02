@@ -207,9 +207,21 @@ function completeAdress(data, ville){
       } else {
         var bodyObj = JSON.parse(body);
         if(ville){
-          var body = {"country": "FRANCE", "locality": data,"postalCode": bodyObj.cities[0].code};
+          //Default no null
+          cp = bodyObj.cities[0].code;
+          for (var i = 0; i < bodyObj.cities.length; i++) {
+            if(bodyObj.cities[i].city == data)
+            cp = bodyObj.cities[i].code;
+          }
+          var body = {"country": "FRANCE", "locality": data,"postalCode": cp};
         } else {
-          var body = {"country": "FRANCE", "locality": bodyObj.cities[0].city,"postalCode": data};
+          //Default no null
+          city = bodyObj.cities[0].city;
+          for (var i = 0; i < bodyObj.cities.length; i++) {
+            if(bodyObj.cities[i].code == data)
+            city = bodyObj.cities[i].city;
+          }
+          var body = {"country": "FRANCE", "locality": city,"postalCode": data};
         }
         console.log(body);
         requestAPIPost('https://api.kiabi.com/v1/stores/find_nearest', process.env.KEY_STORE, body, showAdress);
