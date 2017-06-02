@@ -148,7 +148,7 @@ function showProduct(obj){
     //customer.points = obj.points;
     sendMessage(customer.chatId, {text: randomize(messages.reponses.leproduit)});
     var randCo = obj.colors[Math.floor(Math.random() * obj.colors.length)];
-    console.log("Image"+randCo);
+    console.log("Image"+randCo.picture);
     message = {
       attachment: {
         type: "template",
@@ -157,7 +157,7 @@ function showProduct(obj){
           elements: [{
             title: obj.shortTitle,
             subtitle: obj.description,
-            image_url: randCo+"?apikey=HACKATHON"
+            image_url: randCo.picture+"?apikey=HACKATHON"
           }]
         }
       }
