@@ -123,7 +123,10 @@ function processMessage(event) {
 //Catch fidelity by email
 function catchFidByEmail(obj){
   console.log('Catch Fidelity');
+  console.log(obj);
   obj = JSON.parse(obj);
+  console.log("After parse");
+  console.log(obj);
   obj = JSON.parse(obj[0]);
 
   if(typeof obj.loyalties == "undefined")
