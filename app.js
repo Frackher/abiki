@@ -221,7 +221,7 @@ function showAdress(obj){
   console.log('Show adress');
   obj = JSON.parse(obj);
 
-  if(obj.error == "not_found")
+  if(typeof obj[0] == "undefined")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.nomag)});
   else {
     //customer.points = obj.points;
@@ -248,7 +248,7 @@ function showAdress(obj){
 //Show product
 function showProduct(obj){
   console.log('Show product');
-  //obj = JSON.parse(obj);
+  obj = JSON.parse(obj);
 
   if(obj.error == "not_found")
     sendMessage(customer.chatId, {text: randomize(messages.erreurs.noproduct)});
@@ -417,8 +417,6 @@ function requestAPIPost(url, apikey, body, callback){
       console.log("Error post api "+error);
     } else {
       console.log("APIPOST GO : ");
-      console.dir(response);
-      console.dir(body);
       callback(body)
     }
   });
