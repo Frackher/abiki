@@ -159,7 +159,7 @@ function customize(phrase){
      '#cartefid#':customer.loyalty,
      '#email#':customer.email
   };
-  phrase = phrase.replace(/#name#|#ai.name#/gi, function(matched){
+  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#/gi, function(matched){
     return mapObj[matched];
   });
 
