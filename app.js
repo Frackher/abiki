@@ -211,6 +211,7 @@ function completeAdress(data, ville){
         } else {
           var body = {"country": "FRANCE", "locality": bodyObj.cities[0].city,"postalCode": data};
         }
+        console.log(body);
         requestAPIPost('https://api.kiabi.com/v1/stores/find_nearest', process.env.KEY_STORE, body, showAdress);
       }
   });
