@@ -91,7 +91,7 @@ function processMessage(event) {
           //Will chech first if the person is correct with Abiki
           for (var i = 0; i < badwords.insultes.length; i++) {
             var regEx = new RegExp(badwords.insultes[i], "gi");
-            if(formattedMsg.match(regEx){
+            if(formattedMsg.match(regEx)){
               console.log("INSULTES");
             }
 
