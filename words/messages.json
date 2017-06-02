@@ -4,7 +4,8 @@
     "sex" : "femme",
     "age" : "2 jours",
     "town": "Villeneuve d'Ascq",
-    "angry": ["Vos propos sont insultants >:o !", "Reprenez-vous #name# votre comportement est déplacé !", ">:( >:o >:("]
+    "angry": ["Vos propos sont insultants >:o !", "Reprenez-vous #name# votre comportement est déplacé !", ">:( >:o >:("],
+    "block": ["Je ne vous parle plus à partir de maintenant.", "Cétacé (oui comme les baleines) je ne vous adresse plus la parole."]
   },
   "greetings" : ["Hello #name#, je m'appelle #ai.name# et je suis votre conseillère virtuelle :)",
     "Bonjour #name#, comment allez-vous ? Mon nom est #ai.name#, en quoi puis-je vous aider ?"],

@@ -85,8 +85,10 @@ function processMessage(event) {
       console.log("Message is: " + JSON.stringify(message));
 
       // You may get a text or attachment but not both
-      if (message.text) {
+      if (message.text && !flags.blocked) {
           var formattedMsg = message.text.toLowerCase().trim();
+
+          var insultant = false;
 
           //Will chech first if the person is correct with Abiki
           for (var i = 0; i < badwords.insultes.length; i++) {
@@ -95,6 +97,7 @@ function processMessage(event) {
               console.log("insultes");
               sendMessage(senderId, {text: randomize(messages.ai.angry)});
               flags.badwords++;
+              insultant = true;
             }
           }
 
@@ -104,59 +107,66 @@ function processMessage(event) {
               console.log("sexe");
               sendMessage(senderId, {text: randomize(messages.ai.angry)});
               flags.badwords++;
+              insultant = true
             }
           }
 
-          // If we receive a text message, check to see if it matches any special
-          // keywords and send back the corresponding movie detail.
-          // Otherwise search for new movie.
-          if(formattedMsg.match(/(point)/) && !flags.points){
-            flags.magasin = false;
-            flags.produit = false;
-            flags.points = true;
-            sendMessage(senderId, {text: messages.questions.points});
-          }
-          //Asked for points
-          else if(flags.points){
-            if(re = formattedMsg.match(/\d{12}/)){
-              //Loyalty number
-              customer.loyalty = re[0];
-              sendMessage(senderId, {text: randomize(messages.reponses.carte)});
-              requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
+          if(flags.badwords>4)
+            sendMessage(senderId, {text: randomize(messages.ai.block)});
+            flags.blocked = true;
 
-            } else if (re = formattedMsg.match(/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/)) {
-              //Customer Email
-              customer.email = re[0];
-              sendMessage(senderId, {text: randomize(messages.reponses.email)});
-              requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":customer.email}, catchFidByEmail);
+          if(!insultant && !flags.blocked){
+            // If we receive a text message, check to see if it matches any special
+            // keywords and send back the corresponding movie detail.
+            // Otherwise search for new movie.
+            if(formattedMsg.match(/(point)/) && !flags.points){
+              flags.magasin = false;
+              flags.produit = false;
+              flags.points = true;
+              sendMessage(senderId, {text: messages.questions.points});
+            }
+            //Asked for points
+            else if(flags.points){
+              if(re = formattedMsg.match(/\d{12}/)){
+                //Loyalty number
+                customer.loyalty = re[0];
+                sendMessage(senderId, {text: randomize(messages.reponses.carte)});
+                requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
 
-            } else {
-              //Bad input
-              sendMessage(senderId, {text: randomize(messages.erreurs.noFidnoEmail)});
-            }
-          }
-          else if (formattedMsg.match(/(produit)/) && !flags.produit){
-            flags.points = false;
-            flags.magasin = false;
-            flags.produit = true;
-            sendMessage(senderId, {text: messages.questions.produit});
-          }
-          else if (flags.produit) {
-            if (re = formattedMsg.match(/\d{13}/)){
-              //Sku Number
-              product.id = re[0];
-              sendMessage(senderId, {text: randomize(messages.reponses.produit)});
-              requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_STYLES, false, showProduct);
-            }
-            else {
-              //Bad input
-              sendMessage(senderId, {text: randomize(messages.erreurs.noCode)});
-            }
-          }
-          //Bon là on comprends plus trop la demande
-          else
-            sendMessage(senderId, {text: randomize(messages.comprendspas)});
+              } else if (re = formattedMsg.match(/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/)) {
+                //Customer Email
+                customer.email = re[0];
+                sendMessage(senderId, {text: randomize(messages.reponses.email)});
+                requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":customer.email}, catchFidByEmail);
 
+              } else {
+                //Bad input
+                sendMessage(senderId, {text: randomize(messages.erreurs.noFidnoEmail)});
+              }
+            }
+            else if (formattedMsg.match(/(produit)/) && !flags.produit){
+              flags.points = false;
+              flags.magasin = false;
+              flags.produit = true;
+              sendMessage(senderId, {text: messages.questions.produit});
+            }
+            else if (flags.produit) {
+              if (re = formattedMsg.match(/\d{13}/)){
+                //Sku Number
+                product.id = re[0];
+                sendMessage(senderId, {text: randomize(messages.reponses.produit)});
+                requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_STYLES, false, showProduct);
+              }
+              else {
+                //Bad input
+                sendMessage(senderId, {text: randomize(messages.erreurs.noCode)});
+              }
+            }
+            //Bon là on comprends plus trop la demande
+            else
+              sendMessage(senderId, {text: randomize(messages.comprendspas)});
+
+          }
       } else if (message.attachments) {
           sendMessage(senderId, {text: randomize(messages.pj)});
       }
@@ -244,6 +254,7 @@ function getUserInfo(senderId, requestedFields, callback){
 function welcome(senderId, obj){
   //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
   // Save customer name
+  flags.blocked = false;
   customer.name = obj.first_name
 
   var message = randomize(messages.greetings);
