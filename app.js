@@ -5,34 +5,39 @@
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
-var fs = require('fs');
+var fs = require("fs");
 
 // Customer
-var customer = {"name":"","loyalty":"","email":"","chatId":"","points":""};
-var product = {"id":""};
-var magasin = {"cp":"", "ville":""};
+var customer = { name: "", loyalty: "", email: "", chatId: "", points: "" };
+var product = { id: "" };
+var magasin = { cp: "", ville: "" };
 
 //Flags
-var flags = {"points":false, "produit":false, "magasin":false, "badwords":0, "blocked":false};
+var flags = {
+  points: false,
+  produit: false,
+  magasin: false,
+  badwords: 0,
+  blocked: false
+};
 
 var app = express();
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.listen((process.env.PORT || 5000));
-
+app.listen(process.env.PORT || 5000);
 
 //Read the Json files
-var messages = JSON.parse(fs.readFileSync('./words/messages.json', 'utf8'));
-var badwords = JSON.parse(fs.readFileSync('./words/badwords.json', 'utf8'));
+var messages = JSON.parse(fs.readFileSync("./words/messages.json", "utf8"));
+var badwords = JSON.parse(fs.readFileSync("./words/badwords.json", "utf8"));
 
 // Server index page
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   res.send("We are online !");
 });
 
 // Facebook Webhook
 // Used for verification
-app.get("/webhook", function (req, res) {
+app.get("/webhook", function(req, res) {
   if (req.query["hub.verify_token"] === process.env.VERIFICATION_TOKEN) {
     console.log("Verified webhook");
     res.status(200).send(req.query["hub.challenge"]);
@@ -43,7 +48,7 @@ app.get("/webhook", function (req, res) {
 });
 
 // All callbacks for Messenger will be POST-ed here
-app.post("/webhook", function (req, res) {
+app.post("/webhook", function(req, res) {
   // Make sure this is a page subscription
   if (req.body.object == "page") {
     // Iterate over each entry
@@ -78,178 +83,211 @@ function processPostback(event) {
 // Processing message
 function processMessage(event) {
   if (!event.message.is_echo) {
-      var message = event.message;
-      var senderId = event.sender.id;
-      customer.chatId = event.sender.id;
+    var message = event.message;
+    var senderId = event.sender.id;
+    customer.chatId = event.sender.id;
 
-      console.log("Received message from senderId: " + senderId);
-      console.log("Message is: " + JSON.stringify(message));
+    console.log("Received message from senderId: " + senderId);
+    console.log("Message is: " + JSON.stringify(message));
 
-      // You may get a text or attachment but not both
-      if (message.text && !flags.blocked) {
-          var formattedMsg = message.text.toLowerCase().trim();
+    // You may get a text or attachment but not both
+    if (message.text && !flags.blocked) {
+      var formattedMsg = message.text.toLowerCase().trim();
 
-          var insultant = false;
+      var insultant = false;
 
-          //Will chech first if the person is correct with Abiki
-          for (var i = 0; i < badwords.insultes.length; i++) {
-            var regEx = new RegExp(badwords.insultes[i], "gi");
-            if(formattedMsg.match(regEx)){
-              console.log("insultes");
-              sendMessage(senderId, {text: randomize(messages.ai.angry)});
-              flags.badwords++;
-              insultant = true;
-            }
-          }
-
-          for (var i = 0; i < badwords.sexe.length; i++) {
-            var regEx = new RegExp(badwords.sexe[i], "gi");
-            if(formattedMsg.match(regEx)){
-              console.log("sexe");
-              sendMessage(senderId, {text: randomize(messages.ai.angry)});
-              flags.badwords++;
-              insultant = true
-            }
-          }
-
-          if(flags.badwords>4){
-            sendMessage(senderId, {text: randomize(messages.ai.block)});
-            flags.blocked = true;
-          }
-
-          if(!insultant && !flags.blocked){
-            // If we receive a text message, check to see if it matches any special
-            // keywords and send back the corresponding movie detail.
-            // Otherwise search for new movie.
-            if(formattedMsg.match(/(point)/) && !flags.points){
-              flags.magasin = false;
-              flags.produit = false;
-              flags.points = true;
-              sendMessage(senderId, {text: messages.questions.points});
-            }
-            //Asked for points
-            else if(flags.points){
-              if(re = formattedMsg.match(/\d{12}/)){
-                //Loyalty number
-                customer.loyalty = re[0];
-                sendMessage(senderId, {text: randomize(messages.reponses.carte)});
-                requestAPI('https://api.kiabi.com/v2/loyalties/'+customer.loyalty, process.env.KEY_LOYALTY, true, searchPoints);
-
-              } else if (re = formattedMsg.match(/\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/)) {
-                //Customer Email
-                customer.email = re[0];
-                sendMessage(senderId, {text: randomize(messages.reponses.email)});
-                requestAPIQs('https://api.kiabi.com/v1/anonymous/360customers/', process.env.KEY_CUSTOMER, true, {"email":customer.email}, catchFidByEmail);
-
-              } else {
-                //Bad input
-                sendMessage(senderId, {text: randomize(messages.erreurs.noFidnoEmail)});
-              }
-            }
-            else if (formattedMsg.match(/(produit)/) && !flags.produit){
-              flags.points = false;
-              flags.magasin = false;
-              flags.produit = true;
-              sendMessage(senderId, {text: messages.questions.produit});
-            }
-            else if (flags.produit) {
-              if (re = formattedMsg.match(/\d{13}/)){
-                //Sku Number
-                product.id = re[0];
-                sendMessage(senderId, {text: randomize(messages.reponses.produit)});
-                requestAPI('https://api.kiabi.com/v1/styles/'+product.id, process.env.KEY_STYLES, false, showProduct);
-              }
-              else {
-                //Bad input
-                sendMessage(senderId, {text: randomize(messages.erreurs.noCode)});
-              }
-            }
-            else if (formattedMsg.match(/(magasin)/) && !flags.magasin){
-              flags.points = false;
-              flags.magasin = true;
-              flags.produit = false;
-              sendMessage(senderId, {text: messages.questions.magasin});
-            }
-            else if(flags.magasin){
-              if(re = formattedMsg.match(/\d{5}/)){
-                magasin.cp = re[0];
-                sendMessage(senderId, {text: randomize(messages.reponses.magCP)});
-                completeAdress(magasin.cp, false);
-              } else if (re = formattedMsg.match(/\w{2,35}/)) {
-                magasin.ville = re[0];
-                sendMessage(senderId, {text: randomize(messages.reponses.magVille)});
-                completeAdress(magasin.ville, true);
-              } else {
-                //Bad input
-                sendMessage(senderId, {text: randomize(messages.erreurs.noMagasin)});
-              }
-            }
-            //Bon là on comprends plus trop la demande
-            else
-              sendMessage(senderId, {text: randomize(messages.comprendspas)});
-
-          }
-      } else if (message.attachments) {
-          sendMessage(senderId, {text: randomize(messages.pj)});
+      //Will chech first if the person is correct with Abiki
+      for (var i = 0; i < badwords.insultes.length; i++) {
+        var regEx = new RegExp(badwords.insultes[i], "gi");
+        if (formattedMsg.match(regEx)) {
+          console.log("insultes");
+          sendMessage(senderId, { text: randomize(messages.ai.angry) });
+          flags.badwords++;
+          insultant = true;
+        }
       }
+
+      for (var i = 0; i < badwords.sexe.length; i++) {
+        var regEx = new RegExp(badwords.sexe[i], "gi");
+        if (formattedMsg.match(regEx)) {
+          console.log("sexe");
+          sendMessage(senderId, { text: randomize(messages.ai.angry) });
+          flags.badwords++;
+          insultant = true;
+        }
+      }
+
+      if (flags.badwords > 4) {
+        sendMessage(senderId, { text: randomize(messages.ai.block) });
+        flags.blocked = true;
+      }
+
+      if (!insultant && !flags.blocked) {
+        // If we receive a text message, check to see if it matches any special
+        // keywords and send back the corresponding.
+        if (formattedMsg.match(/(point)/) && !flags.points) {
+          flags.magasin = false;
+          flags.produit = false;
+          flags.points = true;
+          sendMessage(senderId, { text: messages.questions.points });
+        } else if (flags.points) {
+          //Asked for points
+          if ((re = formattedMsg.match(/\d{12}/))) {
+            //Loyalty number
+            customer.loyalty = re[0];
+            sendMessage(senderId, { text: randomize(messages.reponses.carte) });
+            requestAPI(
+              "https://api.kiabi.com/v2/loyalties/" + customer.loyalty,
+              process.env.KEY_LOYALTY,
+              true,
+              searchPoints
+            );
+          } else if (
+            (re = formattedMsg.match(
+              /\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+/
+            ))
+          ) {
+            //Customer Email
+            customer.email = re[0];
+            sendMessage(senderId, { text: randomize(messages.reponses.email) });
+            requestAPIQs(
+              "https://api.kiabi.com/v1/anonymous/360customers/",
+              process.env.KEY_CUSTOMER,
+              true,
+              { email: customer.email },
+              catchFidByEmail
+            );
+          } else {
+            //Bad input
+            sendMessage(senderId, {
+              text: randomize(messages.erreurs.noFidnoEmail)
+            });
+          }
+        } else if (formattedMsg.match(/(produit)/) && !flags.produit) {
+          flags.points = false;
+          flags.magasin = false;
+          flags.produit = true;
+          sendMessage(senderId, { text: messages.questions.produit });
+        } else if (flags.produit) {
+          if ((re = formattedMsg.match(/\d{13}/))) {
+            //Sku Number
+            product.id = re[0];
+            sendMessage(senderId, {
+              text: randomize(messages.reponses.produit)
+            });
+            requestAPI(
+              "https://api.kiabi.com/v1/styles/" + product.id,
+              process.env.KEY_STYLES,
+              false,
+              showProduct
+            );
+          } else {
+            //Bad input
+            sendMessage(senderId, { text: randomize(messages.erreurs.noCode) });
+          }
+        } else if (formattedMsg.match(/(magasin)/) && !flags.magasin) {
+          flags.points = false;
+          flags.magasin = true;
+          flags.produit = false;
+          sendMessage(senderId, { text: messages.questions.magasin });
+        } else if (flags.magasin) {
+          if ((re = formattedMsg.match(/\d{5}/))) {
+            magasin.cp = re[0];
+            sendMessage(senderId, { text: randomize(messages.reponses.magCP) });
+            completeAdress(magasin.cp, false);
+          } else if ((re = formattedMsg.match(/\w{2,35}/))) {
+            magasin.ville = re[0];
+            sendMessage(senderId, {
+              text: randomize(messages.reponses.magVille)
+            });
+            completeAdress(magasin.ville, true);
+          } else {
+            //Bad input
+            sendMessage(senderId, {
+              text: randomize(messages.erreurs.noMagasin)
+            });
+          }
+        } else
+          //Bon là on comprends plus trop la demande
+          sendMessage(senderId, { text: randomize(messages.comprendspas) });
+      }
+    } else if (message.attachments) {
+      sendMessage(senderId, { text: randomize(messages.pj) });
+    }
   }
 }
 
 //completeAdress
-function completeAdress(data, ville){
-  request({
-    url: "https://vicopo.selfbuild.fr/cherche/" + data,
-    method: "GET"
-    }, function(error, response, body){
+function completeAdress(data, ville) {
+  request(
+    {
+      url: "https://vicopo.selfbuild.fr/cherche/" + data,
+      method: "GET"
+    },
+    function(error, response, body) {
       //manage answers
-      if(error) {
-        console.log("Error getting location info: "+ error);
+      if (error) {
+        console.log("Error getting location info: " + error);
       } else {
         var bodyObj = JSON.parse(body);
-        if(ville){
+        if (ville) {
           //Default no null
           cp = bodyObj.cities[0].code;
           for (var i = 0; i < bodyObj.cities.length; i++) {
-            if(bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()){
+            if (bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()) {
               cp = bodyObj.cities[i].code;
             }
           }
-          var body = {"country": "FRANCE", "locality": data,"postalCode": cp.toString()};
+          var body = {
+            country: "FRANCE",
+            locality: data,
+            postalCode: cp.toString()
+          };
         } else {
           //Default no null
           city = bodyObj.cities[0].city;
           for (var i = 0; i < bodyObj.cities.length; i++) {
-            if(bodyObj.cities[i].code == data){
+            if (bodyObj.cities[i].code == data) {
               city = bodyObj.cities[i].city;
             }
           }
-          var body = {"country": "FRANCE", "locality": city,"postalCode": data};
+          var body = { country: "FRANCE", locality: city, postalCode: data };
         }
         console.log(body);
-        requestAPIPost('https://api.kiabi.com/v1/stores/find_nearest', process.env.KEY_STORE, body, showAdress);
+        requestAPIPost(
+          "https://api.kiabi.com/v1/stores/find_nearest",
+          process.env.KEY_STORE,
+          body,
+          showAdress
+        );
       }
-  });
+    }
+  );
 }
 
 // Show adress
-function showAdress(obj){
-  console.log('Show adress');
+function showAdress(obj) {
+  console.log("Show adress");
   //obj = JSON.parse(obj);
 
-  if(typeof obj[0] == "undefined")
-    sendMessage(customer.chatId, {text: randomize(messages.erreurs.nomag)});
+  if (typeof obj[0] == "undefined")
+    sendMessage(customer.chatId, { text: randomize(messages.erreurs.nomag) });
   else {
     //customer.points = obj.points;
-    sendMessage(customer.chatId, {text: randomize(messages.reponses.lemagasin)});
+    sendMessage(customer.chatId, {
+      text: randomize(messages.reponses.lemagasin)
+    });
     message = {
       attachment: {
         type: "template",
         payload: {
           template_type: "generic",
-          elements: [{
-            title: obj[0].store.name,
-            subtitle: obj[0].store.address.addressLine1
-          }]
+          elements: [
+            {
+              title: obj[0].store.name,
+              subtitle: obj[0].store.address.addressLine1
+            }
+          ]
         }
       }
     };
@@ -257,31 +295,36 @@ function showAdress(obj){
 
     flags.magasin = false;
   }
-
 }
 
 //Show product
-function showProduct(obj){
-  console.log('Show product');
+function showProduct(obj) {
+  console.log("Show product");
   obj = JSON.parse(obj);
 
-  if(obj.error == "not_found")
-    sendMessage(customer.chatId, {text: randomize(messages.erreurs.noproduct)});
+  if (obj.error == "not_found")
+    sendMessage(customer.chatId, {
+      text: randomize(messages.erreurs.noproduct)
+    });
   else {
     //customer.points = obj.points;
-    sendMessage(customer.chatId, {text: randomize(messages.reponses.leproduit)});
+    sendMessage(customer.chatId, {
+      text: randomize(messages.reponses.leproduit)
+    });
     var randCo = obj.colors[Math.floor(Math.random() * obj.colors.length)];
-    console.log("Image"+randCo.picture);
+    console.log("Image" + randCo.picture);
     message = {
       attachment: {
         type: "template",
         payload: {
           template_type: "generic",
-          elements: [{
-            title: obj.shortTitle,
-            subtitle: obj.description,
-            image_url: randCo.picture+"?apikey=HACKATHON"
-          }]
+          elements: [
+            {
+              title: obj.shortTitle,
+              subtitle: obj.description,
+              image_url: randCo.picture + "?apikey=HACKATHON"
+            }
+          ]
         }
       }
     };
@@ -292,165 +335,198 @@ function showProduct(obj){
 }
 
 //Catch fidelity by email
-function catchFidByEmail(obj){
-  console.log('Catch Fidelity');
+function catchFidByEmail(obj) {
+  console.log("Catch Fidelity");
   obj = JSON.parse(obj);
 
-  if(typeof obj[0] == "undefined")
-    sendMessage(customer.chatId, {text: randomize(messages.erreurs.noemail)});
+  if (typeof obj[0] == "undefined")
+    sendMessage(customer.chatId, { text: randomize(messages.erreurs.noemail) });
   else {
-    sendMessage(customer.chatId, {text: randomize(messages.reponses.emailFound)});
-    requestAPI('https://api.kiabi.com/v2/loyalties/'+obj[0].loyalties[0].cardNumber, process.env.KEY_LOYALTY, true, searchPoints);
+    sendMessage(customer.chatId, {
+      text: randomize(messages.reponses.emailFound)
+    });
+    requestAPI(
+      "https://api.kiabi.com/v2/loyalties/" + obj[0].loyalties[0].cardNumber,
+      process.env.KEY_LOYALTY,
+      true,
+      searchPoints
+    );
   }
 }
 
 // Search points
-function searchPoints(obj){
+function searchPoints(obj) {
   obj = JSON.parse(obj);
 
-  if(obj.error == "not_found")
-    sendMessage(customer.chatId, {text: randomize(messages.erreurs.nofid)});
+  if (obj.error == "not_found")
+    sendMessage(customer.chatId, { text: randomize(messages.erreurs.nofid) });
   else {
     customer.points = obj.points;
-    sendMessage(customer.chatId, {text: randomize(messages.reponses.points)});
+    sendMessage(customer.chatId, { text: randomize(messages.reponses.points) });
     flags.points = false;
   }
 }
 
 // Ask user info
-function getUserInfo(senderId, requestedFields, callback){
-  request({
-    url: "https://graph.facebook.com/v2.6/" + senderId,
-    qs: {
-      access_token: process.env.PAGE_ACCESS_TOKEN,
-      fields: requestedFields
+function getUserInfo(senderId, requestedFields, callback) {
+  request(
+    {
+      url: "https://graph.facebook.com/v2.6/" + senderId,
+      qs: {
+        access_token: process.env.PAGE_ACCESS_TOKEN,
+        fields: requestedFields
+      },
+      method: "GET"
     },
-    method: "GET"
-    }, function(error, response, body){
+    function(error, response, body) {
       //manage answers
-      if(error) {
-        console.log("Error getting user info: "+ error);
+      if (error) {
+        console.log("Error getting user info: " + error);
       } else {
         var bodyObj = JSON.parse(body);
         callback(senderId, bodyObj);
       }
-  });
+    }
+  );
 }
 
 // Will welcome people
-function welcome(senderId, obj){
+function welcome(senderId, obj) {
   //requestAPI('https://api.kiabi.com/v2/loyalties/500007716959', process.env.KEY_LOYALTY, true);
   // Save customer name
   flags.blocked = false;
   flags.badwords = 0;
-  customer.name = obj.first_name
+  customer.name = obj.first_name;
 
   var message = randomize(messages.greetings);
-  sendMessage(senderId, {text: message});
+  sendMessage(senderId, { text: message });
 }
 
 // Choose a random content
-function randomize(obj){
+function randomize(obj) {
   var rand = obj[Math.floor(Math.random() * obj.length)];
   return customize(rand);
 }
 
 // Customize string with var
-function customize(phrase){
+function customize(phrase) {
   var mapObj = {
-     '#name#':customer.name,
-     '#ai.name#':messages.ai.name,
-     '#cartefid#':customer.loyalty,
-     '#email#':customer.email,
-     '#points#':customer.points,
-     '#produit#':product.id,
-     '#magCP#':magasin.cp,
-     '#magVille#':magasin.ville
+    "#name#": customer.name,
+    "#ai.name#": messages.ai.name,
+    "#cartefid#": customer.loyalty,
+    "#email#": customer.email,
+    "#points#": customer.points,
+    "#produit#": product.id,
+    "#magCP#": magasin.cp,
+    "#magVille#": magasin.ville
   };
-  phrase = phrase.replace(/#name#|#ai.name#|#cartefid#|#email#|#points#|#produit#|#magCP#|#magVille#/gi, function(matched){
-    return mapObj[matched];
-  });
+  phrase = phrase.replace(
+    /#name#|#ai.name#|#cartefid#|#email#|#points#|#produit#|#magCP#|#magVille#/gi,
+    function(matched) {
+      return mapObj[matched];
+    }
+  );
 
   return phrase;
 }
 
 // Request API
-function requestAPI(url, apikey, auth, callback){
-  var headers = {'accept': 'application/json', 'x-apikey': apikey};
-  if(auth)
-    headers = {'accept': 'application/json', 'x-apikey': apikey, 'authorization': process.env.AUTHORIZATION};
+function requestAPI(url, apikey, auth, callback) {
+  var headers = { accept: "application/json", "x-apikey": apikey };
+  if (auth)
+    headers = {
+      accept: "application/json",
+      "x-apikey": apikey,
+      authorization: process.env.AUTHORIZATION
+    };
 
-  request({
-    url : url,
-    headers: headers,
-    method: "GET"
-  }, function(error, response, body){
-    if(error){
-      console.log("Error api "+error);
-    } else {
-      console.log("API GO : "+response+body);
-      callback(body)
+  request(
+    {
+      url: url,
+      headers: headers,
+      method: "GET"
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("Error api " + error);
+      } else {
+        console.log("API GO : " + response + body);
+        callback(body);
+      }
     }
-  });
+  );
 }
 
 // Request API
-function requestAPIQs(url, apikey, auth, qs, callback){
-  var headers = {'accept': 'application/json', 'x-apikey': apikey};
-  if(auth)
-    headers = {'accept': 'application/json', 'x-apikey': apikey, 'authorization': process.env.AUTHORIZATION};
+function requestAPIQs(url, apikey, auth, qs, callback) {
+  var headers = { accept: "application/json", "x-apikey": apikey };
+  if (auth)
+    headers = {
+      accept: "application/json",
+      "x-apikey": apikey,
+      authorization: process.env.AUTHORIZATION
+    };
 
-  request({
-    url : url,
-    headers: headers,
-    qs : qs,
-    method: "GET"
-  }, function(error, response, body){
-    if(error){
-      console.log("Error api "+error);
-    } else {
-      console.log("APIQS GO : ");
-      console.dir(response);
-      console.dir(body);
-      callback(body)
+  request(
+    {
+      url: url,
+      headers: headers,
+      qs: qs,
+      method: "GET"
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("Error api " + error);
+      } else {
+        console.log("APIQS GO : ");
+        console.dir(response);
+        console.dir(body);
+        callback(body);
+      }
     }
-  });
+  );
 }
 
 //Request API POST
-function requestAPIPost(url, apikey, body, callback){
-  var headers = {'accept': 'application/json', 'x-apikey': apikey};
-  console.log('ici'+body);
-  request({
-    url : url,
-    headers: headers,
-    json : true,
-    method: "POST",
-    body : body
-  }, function(error, response, body){
-    if(error){
-      console.log("Error post api "+error);
-    } else {
-      console.log("APIPOST GO : ");
-      console.dir(body);
-      callback(body)
+function requestAPIPost(url, apikey, body, callback) {
+  var headers = { accept: "application/json", "x-apikey": apikey };
+  console.log("ici" + body);
+  request(
+    {
+      url: url,
+      headers: headers,
+      json: true,
+      method: "POST",
+      body: body
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("Error post api " + error);
+      } else {
+        console.log("APIPOST GO : ");
+        console.dir(body);
+        callback(body);
+      }
     }
-  });
+  );
 }
 
 // sends message to user
 function sendMessage(recipientId, message) {
-  request({
+  request(
+    {
       url: "https://graph.facebook.com/v2.6/me/messages",
-      qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+      qs: { access_token: process.env.PAGE_ACCESS_TOKEN },
       method: "POST",
       json: {
-          recipient: {id: recipientId},
-          message: message,
+        recipient: { id: recipientId },
+        message: message
       }
-  }, function(error, response, body) {
+    },
+    function(error, response, body) {
       if (error) {
-          console.log("Error sending message: " + response.error);
+        console.log("Error sending message: " + response.error);
       }
-  });
+    }
+  );
 }

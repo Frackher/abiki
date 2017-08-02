@@ -1,40 +1,101 @@
 {
-  "ai" : {
+  "ai": {
     "name": "Abiki",
-    "sex" : "femme",
-    "age" : "2 jours",
+    "sex": "femme",
+    "age": "2 jours",
     "town": "Villeneuve d'Ascq",
-    "angry": ["Vos propos sont insultants >:o !", "Reprenez-vous #name# votre comportement est déplacé !", ">:( >:o >:("],
-    "block": ["Je ne vous parle plus à partir de maintenant.", "Cétacé (oui comme les baleines) je ne vous adresse plus la parole."]
+    "angry": [
+      "Vos propos sont insultants >:o !",
+      "Reprenez-vous #name# votre comportement est déplacé !",
+      ">:( >:o >:("
+    ],
+    "block": [
+      "Je ne vous parle plus à partir de maintenant.",
+      "Cétacé (oui comme les baleines) je ne vous adresse plus la parole."
+    ]
   },
-  "greetings" : ["Hello #name#, je m'appelle #ai.name# et je suis votre conseillère virtuelle :)",
-    "Bonjour #name#, comment allez-vous ? Mon nom est #ai.name#, en quoi puis-je vous aider ?"],
-  "comprendspas" : ["Excusez-moi, mais je ne comprends pas votre demande...",
-    "Pardon, pouvez-vous répeter ?", "Je suis navrée, mais je crains de ne pas savoir quoi vous répondre"],
-  "pj" : ["Vous êtes un peu en avance car je n'ai pas encore cette fonctionnalité ;)", "Vous devez venir du futur car vous ne pouvez pas encore m'envoyer de photos :(, j'en suis désolé)"],
-  "questions" : {
-    "points" : "Pour connaitre votre nombre de points, vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 12 chiffres.",
-    "produit" : "Je peux vous aider à retrouver un produit, si vous me fournissez sa référence - :) ce sont les chiffres en dessous du code barre.",
-    "magasin" : "Je peux trouver le magasin le plus proche de vous, il vous suffit de me donner un code postal ou le nom d'une ville :)."
+  "greetings": [
+    "Hello #name#, je m'appelle #ai.name# et je suis votre conseillère virtuelle :)",
+    "Bonjour #name#, comment allez-vous ? Mon nom est #ai.name#, en quoi puis-je vous aider ?"
+  ],
+  "comprendspas": [
+    "Excusez-moi, mais je ne comprends pas votre demande...",
+    "Pardon, pouvez-vous répeter ?",
+    "Je suis navrée, mais je crains de ne pas savoir quoi vous répondre"
+  ],
+  "pj": [
+    "Vous êtes un peu en avance car je n'ai pas encore cette fonctionnalité ;)",
+    "Vous devez venir du futur car vous ne pouvez pas encore m'envoyer de photos :(, j'en suis désolé)"
+  ],
+  "questions": {
+    "points": "Pour connaitre votre nombre de points, vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 12 chiffres.",
+    "produit": "Je peux vous aider à retrouver un produit, si vous me fournissez sa référence - :) ce sont les chiffres en dessous du code barre.",
+    "magasin": "Je peux trouver le magasin le plus proche de vous, il vous suffit de me donner un code postal ou le nom d'une ville :)."
   },
-  "reponses" : {
-    "carte" : ["Merci #name#, je recherche avec votre numéro #cartefid#","Un instant je regarde avec le numéro #cartefid#"],
-    "email" : ["Merci #name#, je vais vérifier votre email #email#...","Un tout petit instant, que je consulte votre email #email#"],
-    "emailFound" : ["J'ai trouvé ! je cherche vos points..."],
-    "points": ["#name# vous avez #points# points","Votre solde de points est de #points# points"],
-    "produit": ["Merci je recherche votre produit #produit#...", "Alors le #produit#, j'ai du le ranger par ici."],
-    "leproduit": ["Et hop le voici !", "Je savais bien qu'il était là, voici votre produit :"],
-    "magCP": ["Merci, je recherche via votre code #magCP#, un instant.", "Alors à cet endroit..."],
-    "magVille": ["#magVille# ? Mais je connais très bien ! le plus proche magasin...", "Un instant je recherche le magasin le plus proche de #magVille#"],
-    "lemagasin": ["Voici le magasin le plus proche", "J'y vais souvent aussi ^^ !"]
+  "reponses": {
+    "carte": [
+      "Merci #name#, je recherche avec votre numéro #cartefid#",
+      "Un instant je regarde avec le numéro #cartefid#"
+    ],
+    "email": [
+      "Merci #name#, je vais vérifier votre email #email#...",
+      "Un tout petit instant, que je consulte votre email #email#"
+    ],
+    "emailFound": ["J'ai trouvé ! je cherche vos points..."],
+    "points": [
+      "#name# vous avez #points# points",
+      "Votre solde de points est de #points# points"
+    ],
+    "produit": [
+      "Merci je recherche votre produit #produit#...",
+      "Alors le #produit#, j'ai du le ranger par ici."
+    ],
+    "leproduit": [
+      "Et hop le voici !",
+      "Je savais bien qu'il était là, voici votre produit :"
+    ],
+    "magCP": [
+      "Merci, je recherche via votre code #magCP#, un instant.",
+      "Alors à cet endroit..."
+    ],
+    "magVille": [
+      "#magVille# ? Mais je connais très bien ! le plus proche magasin...",
+      "Un instant je recherche le magasin le plus proche de #magVille#"
+    ],
+    "lemagasin": [
+      "Voici le magasin le plus proche",
+      "J'y vais souvent aussi ^^ !"
+    ]
   },
-  "erreurs" : {
-    "nofid" : ["Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?", "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."],
-    "noemail" : ["Votre email ne semble pas être présent chez nous, désolé.", "#name# désolé mais votre email #email# est incorrect, pouvez-vous le resaisir ? :)"],
-    "noproduct": ["J'ai eu beau chercher mais je n'ai rien trouvé :/.", "Olà je pense qu'il doit y avoir une petite erreur, pouvez-vous me redonner le code ? Merci ;)"],
-    "noFidnoEmail" : ["#name# il faut que ce soit dans l'un des formats précisés.", "Il semble que je ne puisse pas effectuer cette recherche :(","Vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 12 chiffres."],
-    "noCode" : ["Malheureusement #name# je ne reconnais pas ce code.", "Désolé mais ce format m'est inconnu :'("],
-    "noMagasin" : ["Désolé mais je n'arrive pas à voir cet endroit sur ma carte :3", "Il me faut soit un code postal, soit une ville ;) merci !"],
-    "nomag" : ["Il ne semble pas y avoir de magasin si proche :O!", "Désolé ma carte n'affiche rien à cet endroit."]
+  "erreurs": {
+    "nofid": [
+      "Je suis désolée mais le numéro #cartefid# n'est pas dans notre système. Pouvez-vous le vérifier ?",
+      "Oh Oh je crains de ne pas trouver votre numéro #cartefid#, pouvez-vous le retaper ? Merci ;)."
+    ],
+    "noemail": [
+      "Votre email ne semble pas être présent chez nous, désolé.",
+      "#name# désolé mais votre email #email# est incorrect, pouvez-vous le resaisir ? :)"
+    ],
+    "noproduct": [
+      "J'ai eu beau chercher mais je n'ai rien trouvé :/.",
+      "Olà je pense qu'il doit y avoir une petite erreur, pouvez-vous me redonner le code ? Merci ;)"
+    ],
+    "noFidnoEmail": [
+      "#name# il faut que ce soit dans l'un des formats précisés.",
+      "Il semble que je ne puisse pas effectuer cette recherche :(",
+      "Vous pouvez me donner votre numéro de carte de fidélité ou votre email. Votre numéro de carte de fidélité se compose de 12 chiffres."
+    ],
+    "noCode": [
+      "Malheureusement #name# je ne reconnais pas ce code.",
+      "Désolé mais ce format m'est inconnu :'("
+    ],
+    "noMagasin": [
+      "Désolé mais je n'arrive pas à voir cet endroit sur ma carte :3",
+      "Il me faut soit un code postal, soit une ville ;) merci !"
+    ],
+    "nomag": [
+      "Il ne semble pas y avoir de magasin si proche :O!",
+      "Désolé ma carte n'affiche rien à cet endroit."
+    ]
   }
 }
