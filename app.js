@@ -233,9 +233,12 @@ function completeAdress(data, ville) {
         if (ville) {
           //Default no null
           cp = bodyObj.cities[0].code;
+          console.log("CP"+cp);
           for (var i = 0; i < bodyObj.cities.length; i++) {
+            console.log("CP Search :"+bodyObj.cities[i].city.toLowerCase());
             if (bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()) {
               cp = bodyObj.cities[i].code;
+              console.log("CP found");
             }
           }
           var body = {
@@ -253,7 +256,7 @@ function completeAdress(data, ville) {
           }
           var body = { country: "FRANCE", locality: city, postalCode: data };
         }
-        console.log(body);
+
         console.log("Here #now, Body : ");
         console.log(body);
         requestAPIPost(
