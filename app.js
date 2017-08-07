@@ -455,8 +455,6 @@ function requestAPI(url, apikey, auth, callback) {
         console.log("Error api " + error);
       } else {
         console.log("API GO : " + response + body);
-        console.log("Réponse :");
-        console.log(response);
 console.log("Body :");
         console.log(body);
 console.log("Callback :");
