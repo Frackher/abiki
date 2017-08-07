@@ -233,12 +233,12 @@ function completeAdress(data, ville) {
         if (ville) {
           //Default no null
           cp = bodyObj.cities[0].code;
-          console.log("CP"+cp);
+          console.log("City"+cp);
           for (var i = 0; i < bodyObj.cities.length; i++) {
-            console.log("CP Search :"+bodyObj.cities[i].city.toLowerCase());
+            console.log("City Search :"+bodyObj.cities[i].city.toLowerCase());
             if (bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()) {
               cp = bodyObj.cities[i].code;
-              console.log("CP found");
+              console.log("City found");
             }
           }
           var body = {
@@ -249,12 +249,19 @@ function completeAdress(data, ville) {
         } else {
           //Default no null
           city = bodyObj.cities[0].city;
+          console.log("CP"+city);
           for (var i = 0; i < bodyObj.cities.length; i++) {
+            console.log("CP search : "+bodyObj.cities[i].code);
             if (bodyObj.cities[i].code == data) {
               city = bodyObj.cities[i].city;
+              console.log("CP found");
             }
           }
-          var body = { country: "FRANCE", locality: city, postalCode: data };
+          var body = {
+            country: "FRANCE",
+            locality: city,
+            postalCode: data
+          };
         }
 
         console.log("Here #now, Body : ");
