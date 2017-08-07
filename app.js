@@ -254,6 +254,8 @@ function completeAdress(data, ville) {
           var body = { country: "FRANCE", locality: city, postalCode: data };
         }
         console.log(body);
+        console.log("Here #now, Body : ");
+        console.log(body);
         requestAPIPost(
           "https://api.kiabi.com/v1/stores/find_nearest",
           process.env.KEY_STORE,
@@ -270,8 +272,10 @@ function showAdress(obj) {
   console.log("Show adress");
   //obj = JSON.parse(obj);
 
-  if (typeof obj[0] == "undefined")
+  if (typeof obj[0] == "undefined"){
     sendMessage(customer.chatId, { text: randomize(messages.erreurs.nomag) });
+    flags.magasin = false;
+  }
   else {
     //customer.points = obj.points;
     sendMessage(customer.chatId, {
