@@ -343,8 +343,7 @@ function showProduct(obj) {
       }
     };
     sendMessage(customer.chatId, message);
-
-    flags.product = false;
+    flags.produit = false;
   }
 }
 
