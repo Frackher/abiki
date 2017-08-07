@@ -358,6 +358,8 @@ function catchFidByEmail(obj) {
 
 // Search points
 function searchPoints(obj) {
+  console.log("Searching Points");
+  console.log(obj);
   obj = JSON.parse(obj);
 
   if (obj.error == "not_found")
