@@ -242,9 +242,9 @@ function completeAdress(data, ville) {
             }
           }
           var body = {
-            country: "FRANCE",
-            locality: data,
-            postalCode: cp.toString()
+            "country": "FRANCE",
+            "locality": data,
+            "postalCode": cp.toString()
           };
         } else {
           //Default no null
@@ -258,9 +258,9 @@ function completeAdress(data, ville) {
             }
           }
           var body = {
-            country: "FRANCE",
-            locality: city,
-            postalCode: data
+            "country": "FRANCE",
+            "locality": city,
+            "postalCode": data
           };
         }
 
