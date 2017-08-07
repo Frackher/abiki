@@ -454,10 +454,10 @@ function requestAPI(url, apikey, auth, callback) {
       if (error) {
         console.log("Error api " + error);
       } else {
-        console.log("API GO : " + response + body);
-console.log("Body :");
+        console.log("API GO : "+ url + response + body);
+        console.log("Body :");
         console.log(body);
-console.log("Callback :");
+        console.log("Callback :");
         console.log(callback);
         callback(body);
       }
