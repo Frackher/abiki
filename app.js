@@ -345,6 +345,8 @@ function catchFidByEmail(obj) {
     sendMessage(customer.chatId, {
       text: randomize(messages.reponses.emailFound)
     });
+    console.log("API Fidelity call :"+"https://api.kiabi.com/v2/loyalties/" + obj[0].loyalties[0].cardNumber,
+    process.env.KEY_LOYALTY);
     requestAPI(
       "https://api.kiabi.com/v2/loyalties/" + obj[0].loyalties[0].cardNumber,
       process.env.KEY_LOYALTY,
