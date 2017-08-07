@@ -513,6 +513,7 @@ function requestAPIQs(url, apikey, auth, qs, callback) {
 function requestAPIPost(url, apikey, body, callback) {
   var headers = { accept: "application/json", "x-apikey": apikey };
   console.log("ici" + body);
+  console.log(url + headers + body);
   request(
     {
       url: url,
