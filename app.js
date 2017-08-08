@@ -233,26 +233,38 @@ function completeAdress(data, ville) {
         if (ville) {
           //Default no null
           cp = bodyObj.cities[0].code;
+          console.log("City"+cp);
           for (var i = 0; i < bodyObj.cities.length; i++) {
+            console.log("City Search :"+bodyObj.cities[i].city.toLowerCase());
             if (bodyObj.cities[i].city.toLowerCase() == data.toLowerCase()) {
               cp = bodyObj.cities[i].code;
+              console.log("City found");
             }
           }
           var body = {
-            country: "FRANCE",
-            locality: data,
-            postalCode: cp.toString()
+            "country": "FRANCE",
+            "locality": data,
+            "postalCode": cp.toString()
           };
         } else {
           //Default no null
           city = bodyObj.cities[0].city;
+          console.log("CP"+city);
           for (var i = 0; i < bodyObj.cities.length; i++) {
+            console.log("CP search : "+bodyObj.cities[i].code);
             if (bodyObj.cities[i].code == data) {
               city = bodyObj.cities[i].city;
+              console.log("CP found");
             }
           }
-          var body = { country: "FRANCE", locality: city, postalCode: data };
+          var body = {
+            "country": "FRANCE",
+            "locality": city,
+            "postalCode": data
+          };
         }
+
+        console.log("Here #now, Body : ");
         console.log(body);
         requestAPIPost(
           "https://api.kiabi.com/v1/stores/find_nearest",
@@ -270,8 +282,10 @@ function showAdress(obj) {
   console.log("Show adress");
   //obj = JSON.parse(obj);
 
-  if (typeof obj[0] == "undefined")
+  if (typeof obj[0] == "undefined"){
     sendMessage(customer.chatId, { text: randomize(messages.erreurs.nomag) });
+    flags.magasin = false;
+  }
   else {
     //customer.points = obj.points;
     sendMessage(customer.chatId, {
@@ -329,8 +343,7 @@ function showProduct(obj) {
       }
     };
     sendMessage(customer.chatId, message);
-
-    flags.product = false;
+    flags.produit = false;
   }
 }
 
@@ -345,6 +358,8 @@ function catchFidByEmail(obj) {
     sendMessage(customer.chatId, {
       text: randomize(messages.reponses.emailFound)
     });
+    console.log("API Fidelity call :"+"https://api.kiabi.com/v2/loyalties/" + obj[0].loyalties[0].cardNumber,
+    process.env.KEY_LOYALTY);
     requestAPI(
       "https://api.kiabi.com/v2/loyalties/" + obj[0].loyalties[0].cardNumber,
       process.env.KEY_LOYALTY,
@@ -356,6 +371,8 @@ function catchFidByEmail(obj) {
 
 // Search points
 function searchPoints(obj) {
+  console.log("Searching Points");
+  console.log(obj);
   obj = JSON.parse(obj);
 
   if (obj.error == "not_found")
@@ -450,7 +467,11 @@ function requestAPI(url, apikey, auth, callback) {
       if (error) {
         console.log("Error api " + error);
       } else {
-        console.log("API GO : " + response + body);
+        console.log("API GO : "+ url + response + body);
+        console.log("Body :");
+        console.log(body);
+        console.log("Callback :");
+        console.log(callback);
         callback(body);
       }
     }
@@ -491,6 +512,7 @@ function requestAPIQs(url, apikey, auth, qs, callback) {
 function requestAPIPost(url, apikey, body, callback) {
   var headers = { accept: "application/json", "x-apikey": apikey };
   console.log("ici" + body);
+  console.log(url + headers + body);
   request(
     {
       url: url,
