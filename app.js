@@ -108,7 +108,7 @@ function processMessage(event) {
       }
 
       for (var i = 0; i < badwords.sexe.length; i++) {
-        var regEx = new RegExp(badwords.sexe[i], "gi");
+        var regEx = new RegExp("\b"+badwords.sexe[i]+"\b", "gi");
         if (formattedMsg.match(regEx)) {
           console.log("sexe");
           sendMessage(senderId, { text: randomize(messages.ai.angry) });
